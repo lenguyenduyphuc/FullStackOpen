@@ -1,45 +1,44 @@
-"use strict"
-// Header Component
-const Header = ({ courseName }) => {
-  console.log(courseName)
-  return <h1>{courseName}</h1>;
-};
+import './App.css'
 
-// Part Component
-const Part = ({ part }) => {
+
+//Header of course info
+const Header = (props) => (
+  <h1>{props.name}</h1>
+)
+
+//Get the name and exercises inside the parts
+const Part = (props) => (
+  <>
+    <h2>{props.part.name}</h2>
+    <p>There are {props.part.exercises} exercises in this part of the course</p>
+  </>
+)
+
+//Get the content
+const Content = (props) => (
+  <>
+    <Part part = {props.parts[0]}/>
+    <Part part = {props.parts[1]}/>
+    <Part part = {props.parts[2]} />
+  </>
+)
+//Calculate number of course
+const Total = (props) =>{
+  console.log(props)
+  let total = props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises
   return (
-    <p>
-      {part.name} {part.exercises}
-    </p>
-  );
-};
+    <p>Number of exercises {total}</p>
+  )
+}
 
-// Content Component
-const Content = ({ contents }) => {
-  console.log(contents)
-  return (
-    <div>
-      <Part part={contents[0]} />
-      <Part part={contents[1]} />
-      <Part part={contents[2]} />
-    </div>
-  );
-};
 
-// Total Component
-const Total = ({ contents }) => {
-  const totalExercises = contents[0].exercises + contents[1].exercises + contents[2].exercises;
-  return <p>Number of exercises {totalExercises}</p>;
-};
-
-// App Component
 const App = () => {
   const course = {
-    name: 'Half Stack Application Development',
-    contents: [
+    name: 'Half Stack application development',
+    parts: [
       {
         name: 'Fundamentals of React',
-        exercises: 15
+        exercises: 10
       },
       {
         name: 'Using props to pass data',
@@ -47,18 +46,18 @@ const App = () => {
       },
       {
         name: 'State of a component',
-        exercises: 14 
+        exercises: 14
       }
     ]
-  };
+  }
 
   return (
     <div>
-      <Header courseName={course.name} />
-      <Content contents={course.contents} />
-      <Total contents={course.contents} />
+      <Header header={course}/>
+      <Content parts={course.parts}/>
+      <Total parts={course.parts}/>
     </div>
-  );
+  )
 }
 
-export default App
+export default App;
