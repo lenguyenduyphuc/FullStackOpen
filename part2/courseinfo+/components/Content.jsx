@@ -1,17 +1,15 @@
-import Part from './Part';
+import React from 'react'
+import Part from './Part'
 
-const Content = ({ parts }) => {
-  if (!parts || !Array.isArray(parts)) {
-    return <p>No parts available</p>;
-  }
-
+const Content = ({parts}) => {
+  console.log('Showing content', parts)
   return (
     <div>
       {parts.map((part) => (
-        <Part key={part.id} name={part.name} exercises={part.exercises} />
+        <Part key={part.id} part={part.name} exercises={part.exercises} />
       ))}
     </div>
-  );
+  )
 }
 
-export default Content;
+export default Content

@@ -1,10 +1,12 @@
-const Part = ({ name, exercises }) => {
-    return (
-      <p>
-        {name} {exercises}
-      </p>
-    );
-  }
-  
-  export default Part;
-  
+import React from 'react'
+
+const Part = ({part, exercises}) =>{
+  console.log('Part component showing',part, exercises)
+  return (
+    <p>
+      {part} {exercises}
+    </p>
+  )
+}
+
+export default Part

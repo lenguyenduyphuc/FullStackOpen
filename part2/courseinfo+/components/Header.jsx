@@ -1,9 +1,8 @@
-import Part from './Part'
-
-const Header = ({name}) => {
-    console.log(name)
+import React from 'react'
+const Header = ({course}) => {
+    console.log('Header',course)
     return (
-        <h2>{name}</h2>
+        <h1>{course}</h1>
     )
 }
 

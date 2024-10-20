@@ -1,12 +1,14 @@
 import {useState} from 'react'
 
 const Header = ({name}) => {
+    console.log(name)
     return (
         <h2>{name}</h2>
     )
 }
 
 const Anecdotes =({text, votesCount}) =>{
+    console.log(text, votesCount )
     return (
         <div>
             <p>{text}</p>
@@ -15,7 +17,11 @@ const Anecdotes =({text, votesCount}) =>{
     )
 }
 
+
+
+
 const Winner = ({anecdotes, allVotes}) => {
+    console.log(anecdotes, allVotes)
     const highestVoteCount = Math.max(...allVotes)
     const winnerIndex = allVotes.indexOf(highestVoteCount)
     const winner = anecdotes[winnerIndex]

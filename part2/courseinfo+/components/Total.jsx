@@ -1,13 +1,14 @@
-const Total = ({ parts }) => {
-    if (!parts || !Array.isArray(parts)) {
-      return <p>Total exercises not available</p>;
-    }
-  
-    const totalExercises = parts.reduce((sum, part) => sum + part.exercises, 0);
-    return (
-      <p><strong>total of {totalExercises} exercises</strong></p>
-    );
-  }
-  
-  export default Total;
-  
+import React from 'react'
+
+
+const Total = ({parts}) =>{
+  console.log('Showing parts of total', parts)
+  const total = parts.reduce((sum, part) =>{
+    return sum + part.exercises
+  }, 0)
+  return (
+    <p><b>Number of exercises {total}</b></p>
+  )
+}
+
+export default Total

@@ -1,55 +1,54 @@
+import React from 'react'
 import Course from './components/Course'
 
 const App = () => {
-    const course = [{
-      name: 'Half Stack Application Development',
+  const courses = [
+    {
+      name: 'Half Stack application development',
       id: 1,
-      contents: [
+      parts: [
         {
-          id: 1,  
           name: 'Fundamentals of React',
-          exercises: 10
+          exercises: 10,
+          id: 1
         },
         {
-            id: 2,
           name: 'Using props to pass data',
-          exercises: 7
+          exercises: 7,
+          id: 2
         },
         {
-            id: 3,
           name: 'State of a component',
-          exercises: 14 
+          exercises: 14,
+          id: 3
         },
         {
-            id: 4,
-            name: 'Redux',
-            exercises: 11
+          name: 'Redux',
+          exercises: 11,
+          id: 4
         }
       ]
-    },
+    }, 
     {
-      name: "Node.js",
+      name: 'Node.js',
       id: 2,
       parts: [
         {
-          name: "Routing",
-          id: 2,
-          exercises: 3
+          name: 'Routing',
+          exercises: 3,
+          id: 1
         },
         {
-          name: "Middlewares",
+          name: 'Middlewares',
           exercises: 7,
           id: 2
         }
       ]
     }
-  ] 
-  
-    return (
-      <div>
-        <Course course={course} />
-      </div>
-    );
-  }
-  
-  export default App
+  ]
+
+
+  return <Course courses={courses} />
+}
+
+export default App
