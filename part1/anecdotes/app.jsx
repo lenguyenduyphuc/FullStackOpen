@@ -1,30 +1,44 @@
 import {useState} from 'react'
 
-const Button = ({handleClick, text}) => {
+const Header = ({name}) => {
     return (
-    <button onClick = {handleClick}> 
-        {text}
-    </button>
+        <h2>{name}</h2>
     )
 }
 
-
-const getRandomInt =(max) =>{
-    return Math.floor(Math.random() * max)
+const Anecdotes =({text, votesCount}) =>{
+    return (
+        <div>
+            <p>{text}</p>
+            <p>{votesCount}</p>
+        </div>
+    )
 }
 
-const handleVote = (votes, selected, setVotes) =>{
-    const copy = [...votes]
-    copy[selected] += 1
-    setVotes(copy)
+const Winner = ({anecdotes, allVotes}) => {
+    const highestVoteCount = Math.max(...allVotes)
+    const winnerIndex = allVotes.indexOf(highestVoteCount)
+    const winner = anecdotes[winnerIndex]
+    if (highestVoteCount === 0){
+        return (
+            <p>No votes yet</p>
+        )
+    }
+    return (
+        <div>
+            <p>{winner}</p>
+            <p>has {highestVoteCount} votes</p>
+        </div>
+    )
 }
 
-const findMostVotes = (votes) =>{
-    const maxVotes = Math.max(...votes)
-    const mostVotedIndex = votes.indexOf(maxVotes)
-    return mostVotedIndex
+const Button = ({onClick, text}) => {
+    return (
+        <button onClick={onClick}>
+            {text}
+        </button>
+    )
 }
-
 
 const App = () => {
     const anecdotes = [
@@ -37,26 +51,31 @@ const App = () => {
         'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
         'The only way to go fast, is to go well.'
       ]
-    const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0))
-      //handle selected
-    const [selected, setSelected] = useState(0)
-
-
-    const mostVotedIndex = findMostVotes(votes)
     
+    const [selected, setSelected] = useState(0)
+    //Vote for each sentence, initialize with 0
+    const [allVotes, setAllVotes] = useState(Array(anecdotes.length).fill(0))
+
+    const handleVoteClick = () => {
+        const newAllVotes = [...allVotes]
+        newAllVotes[selected] += 1
+        setAllVotes(newAllVotes)
+    }
+
+    const handleAnecdoteClick = () => {
+        const arrayIndex = Math.floor(Math.random() * anecdotes.length)
+        setSelected(arrayIndex)
+    }
+
     return (
         <div>
-            <h2>Anecdote of the day</h2>
-            <p>{anecdotes[selected]}</p>
-            <p>has {votes[selected]} votes</p>
-            <div>
-                <Button handleClick={() => setSelected(getRandomInt(anecdotes.length))} text="next anecdote"/>
-                <Button handleClick={() => handleVote(votes, selected, setVotes)} text="vote"/>
-            </div>
+            <Header name="Anecdote of the day" />
+            <Anecdotes text={anecdotes[selected]} votesCount={allVotes[selected]}/>
+            <Button onClick={handleVoteClick} text={"Vote"}/>
+            <Button onClick={handleAnecdoteClick} text={"Next anecdote"} />
 
-            <h2>Anecdote with most votes</h2>
-            <p>{anecdotes[mostVotedIndex]}</p>
-            <p>has {votes[mostVotedIndex]}</p>
+            <Header name="Anecdote with the most votes"/>
+            <Winner anecdotes={anecdotes} allVotes={allVotes}/>
         </div>
     )
 }
