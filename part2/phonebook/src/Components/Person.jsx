@@ -1,18 +1,18 @@
-import React from 'react'
+import React from 'react';
 
-const Person = ({personsToShow}) => {
-    console.log(personsToShow)
-    return (
-        <>
-        {personsToShow.map((person) => {
-            return (
-                <p key={person.id}>
-                {person.name} {person.number}
-            </p>
-            )
-        })}
-        </>
-    )
-}
+const Person = ({ personsToShow }) => {
+  console.log(personsToShow);  // This will only log if the props change
+  return (
+    <>
+      {personsToShow.map((person) => {
+        return (
+          <p key={person.id}>
+            {person.name} {person.number}
+          </p>
+        );
+      })}
+    </>
+  );
+};
 
-export default Person
+export default Person;
