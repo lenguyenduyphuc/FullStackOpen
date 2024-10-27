@@ -1,6 +1,5 @@
 # 🌐 FullStackOpen Project
 
-![FullStackOpen](https://fullstackopen.com/assets/fslogo.png)
 
 ## 🚀 About the Project
 
