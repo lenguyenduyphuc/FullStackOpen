@@ -1,0 +1,26 @@
+graph TD 0.4
+    A[User] -->|Types a note in the text field| B[Browser]
+    B -->|Clicks Save Button| C[Browser sends POST request]
+    C -->|POST /new_note | D[Server]
+    D -->|Server saves the note| E[Database]
+    E -->|New note saved in DB| F[Server sends response]
+    F -->|Server sends 201 Created status| G[Browser]
+    G -->|Browser updates notes list| A
+
+graph TD 0.5
+    A[User] -->|Navigates to /spa| B[Browser]
+    B -->|Browser sends GET request to /spa| C[Server]
+    C -->|Server sends HTML, JavaScript, CSS| D[Browser loads SPA]
+    D -->|Browser executes JavaScript| E[API request: GET /data.json]
+    E -->|Browser requests note data from server| F[Server sends JSON data]
+    F -->|Server responds with note data (JSON)| G[Browser renders notes dynamically]
+    G -->|SPA updates the UI with notes| A
+
+graph TD 0.6
+    A[User] -->|Types a note in the text field| B[Browser]
+    B -->|Clicks Save Button| C[JavaScript intercepts event]
+    C -->|JavaScript sends POST request with note| D[API POST /new_note]
+    D -->|Server receives and processes request| E[Database]
+    E -->|Note saved in the database| F[Server responds with JSON]
+    F -->|Server sends success response| G[Browser updates UI dynamically]
+    G -->|JavaScript updates note list without page reload| A

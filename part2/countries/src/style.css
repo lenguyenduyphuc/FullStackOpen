@@ -1,0 +1,81 @@
+/* Global styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+  }
+  
+  
+  /* Header */
+  h1 {
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  /* Subtitle */
+  h2 {
+    font-size: 1.5rem;
+    color: #555;
+  }
+  
+  /* Paragraph styling */
+  p {
+    font-size: 1rem;
+  }
+  
+  /* Capital, population, and area */
+  p span {
+    font-weight: bold;
+  }
+  
+  /* List styling for languages */
+  ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    font-size: 1.125rem;
+  }
+  
+  /* Country flag */
+  img {
+    display: block;
+    margin: 20px 0;
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Weather information */
+  .weather {
+    font-size: 1.25rem;
+    background-color: #e9f5ff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .weather img {
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+  
+  .weather p {
+    margin: 10px 0;
+    font-size: 1.125rem;
+  }
+  
+  /* Highlighting the key weather info */
+  .weather p span {
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  /* Weather description and data */
+  .weather-icon {
+    display: flex;
+    align-items: center;
+  }
+  
+  .weather-icon img {
+    width: 64px;
+    height: 64px;
+    margin-right: 15px;
+  }
