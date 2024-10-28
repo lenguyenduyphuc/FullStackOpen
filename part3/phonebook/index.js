@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
 
 let persons = [
     { 
@@ -26,6 +27,16 @@ let persons = [
 
 app.use(express.json())
 
+app.use(morgan((tokens, req, res) => {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms',
+    JSON.stringify(req.body)
+  ].join(' ')
+}))
 
 app.get('/api/persons', (request, response) => {
   response.json(persons)
@@ -62,7 +73,10 @@ app.delete('/api/persons/:id', (request, response) => {
 //add person name
 app.post('/api/persons', (request, response) => {
   const body = request.body
-  if (!body.name || !body.number){
+  const personName = body.name
+  const personNumber = body.number
+  
+  if (!personName || !personNumber){
     return response.status(400).json({
       error: "missing-content"
     })
@@ -76,8 +90,8 @@ app.post('/api/persons', (request, response) => {
 
 
   const person = {
-    name: body.name,
-    number: body.number,
+    name: personName,
+    number: personNumber,
     id: Math.floor(Math.random() * 1000000)
   }
 
@@ -85,7 +99,18 @@ app.post('/api/persons', (request, response) => {
   response.json(person)
 })
 
+const errorHandler = (error, request, response, next) => {
+  console.log(error.message)
 
+  if (error.name === "CastError"){
+    return response.status(400).send({error: "Malformatted ID"})
+  } else if (error.name = "ValidationError"){
+    return response.status(400).send({error: error.message})
+  }
+  next(error)
+}
+
+app.use(errorHandler)
   
 const PORT = 3001
 app.listen(PORT, () => {
