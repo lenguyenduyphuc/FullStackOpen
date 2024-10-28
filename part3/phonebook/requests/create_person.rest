@@ -1,0 +1,8 @@
+POST http://localhost:3001/api/persons
+Content-type: application/json
+
+
+{
+    "name": "Nguyen Duy Phuc Le",
+    "number": "046565365"
+}

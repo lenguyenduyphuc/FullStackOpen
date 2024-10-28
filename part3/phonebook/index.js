@@ -24,7 +24,7 @@ let persons = [
     }
 ]
 
-app.set(express.json())
+app.use(express.json())
 
 const generateId = () => {
   const maxId = persons.length > 0
@@ -57,11 +57,31 @@ app.get('/info', (request, response) => {
     `)
 })
 
+//delete a person
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   persons = persons.filter(person => person.id !== id)
 
   response.json(204).end()
+})
+
+//add person name
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+
+  if (!body.name || !body.number){
+    return response.json(400).end({
+      error: "missing content"
+    })
+  }
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: Math.floor(Math.random() * 1000000)
+  }
+
+  persons = persons.concat(person)
+  response.json(person)
 })
 
 
