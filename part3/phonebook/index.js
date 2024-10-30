@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
+const cors =  require('cors')
+
 
 let persons = [
     { 
@@ -25,7 +27,9 @@ let persons = [
     }
 ]
 
+app.use(express.static('dist'))
 app.use(express.json())
+app.use(cors())
 
 app.use(morgan((tokens, req, res) => {
   return [
@@ -112,7 +116,7 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
   
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
