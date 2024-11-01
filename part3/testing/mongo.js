@@ -28,13 +28,12 @@ noteSchema.set('toJSON', {
 
 const Note = mongoose.model('Note', noteSchema)
 
-// const note = new Note({
-//   content: 'HTML is easy',
-//   date: new Date(),
-//   important: false
-// })
+const note = new Note({
+  content: 'HTML is easy',
+  important: true
+})
 
-Note.find({important: true}).then(result => {
+Note.find({}).then(result => {
     result.forEach(note => {
         console.log(note)
     })
