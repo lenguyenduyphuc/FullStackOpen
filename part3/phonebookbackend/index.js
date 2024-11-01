@@ -1,31 +1,12 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
 const cors =  require('cors')
 
+const Person = require('./models/phonebook')
 
-let persons = [
-    { 
-      "id": "1",
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": "2",
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": "3",
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": "4",
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
+let persons = []
 
 app.use(express.static('dist'))
 app.use(express.json())
@@ -42,29 +23,44 @@ app.use(morgan((tokens, req, res) => {
   ].join(' ')
 }))
 
+
+//get the persons info from the database
+app.get('/info', (request, response) => {
+  const currentDate = new Date().toLocaleString()
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  Person.find({}).then(persons => {
+    response.send(
+      `
+      <div>
+        <p>Phonebook has info for ${persons.length} people</p>
+      </div>
+      <div>
+          <p>${currentDate} (${timeZone})</p>
+      </div>`
+    )
+  })
+})
+
+//get the persons from the database
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+  Person.find({}).then(persons => {
+    response.json(persons.map(person => person.toJSON()))
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const person = persons.find(person => person.id === id)
-  if (person){
-    response.json(person)
-  }
-  else {
-    response.json(400).end()
-  }
+  Person.findById(request.params.id)
+  .then(person => {
+    if (person){
+      response.json(person.toJSON())
+    }
+    else {
+      response.status(404).end()
+    }
+  })
+  .catch(error => next(error))
 })
 
-app.get('/info', (request, response) => {
-  const number = persons.length
-  const date = new Date()
-  response.send(`
-    <p>Phone book has info for ${number} people</p>
-    <p>${date}</p>
-    `)
-})
 
 //delete a person
 app.delete('/api/persons/:id', (request, response) => {
@@ -96,11 +92,11 @@ app.post('/api/persons', (request, response) => {
   const person = {
     name: personName,
     number: personNumber,
-    id: Math.floor(Math.random() * 1000000)
   }
 
-  persons = persons.concat(person)
-  response.json(person)
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 })
 
 const errorHandler = (error, request, response, next) => {
@@ -116,7 +112,7 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
   
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

@@ -5,6 +5,7 @@ if (process.argv.length<3 && process.argv.length>5){
     process.exit(1)
 }
 
+//set up the password
 const password = process.argv[2]
 
 const url =
@@ -18,6 +19,7 @@ const personSchema = new mongoose.Schema({
     number: String
 })
 
+//define schema and person
 const Person = mongoose.model('Person', personSchema)
 
 if (process.argv.length === 5){
