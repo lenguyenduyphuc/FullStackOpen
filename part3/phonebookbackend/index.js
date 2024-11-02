@@ -29,11 +29,11 @@ const unknownEndpoint = (request, response) => {
 app.get('/info', (request, response) => {
   const currentDate = new Date().toLocaleString()
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  Person.find({}).then(persons => {
+  Person.find({}).then(person => {
     response.send(
       `
       <div>
-        <p>Phonebook has info for ${persons.length} people</p>
+        <p>Phonebook has info for ${person.length} people</p>
       </div>
       <div>
           <p>${currentDate} (${timeZone})</p>
@@ -93,7 +93,6 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-
   const person = {
     name: personName,
     number: personNumber,
@@ -103,6 +102,7 @@ app.post('/api/persons', (request, response) => {
     response.json(savedPerson)
   })
 })
+
 
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
