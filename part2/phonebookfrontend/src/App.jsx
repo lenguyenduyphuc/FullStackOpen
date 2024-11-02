@@ -4,7 +4,7 @@ import PersonForm from './Components/PersonForm'
 import Content from './Components/Content'
 import personService from './service/person'
 import Notification from './Components/Notification'
-
+import './AppStyle.css'
 
 const App = () => {
   const [ persons, setPersons] = useState([])

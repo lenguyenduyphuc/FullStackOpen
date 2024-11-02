@@ -1,14 +1,14 @@
 const mongoose = require('mongoose')
+require('dotenv').config()
 
-if (process.argv.length<3) {
-  console.log('give password as argument')
-  process.exit(1)
-}
 
-const password = process.argv[2]
+const uri = process.env.MONGODB_URI;
 
-const url =
- `mongodb+srv://phuc:${password}@cluster0.pezqi.mongodb.net/myDatabase?retryWrites=true&w=majority`
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("Connected to MongoDB"))
+  .catch(error => console.error("Error connecting to MongoDB:", error.message));
+
+
 
 mongoose.set('strictQuery', false)
 mongoose.connect(url).then(() => {

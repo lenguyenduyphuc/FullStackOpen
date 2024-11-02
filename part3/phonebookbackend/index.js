@@ -22,9 +22,6 @@ app.use(morgan((tokens, req, res) => {
   ].join(' ')
 }))
 
-const unknownEndpoint = (request, response) => {
-  response.status(400).send({error: 'unknown endpoint'})
-}
 
 //get the persons info from the database
 app.get('/info', (request, response) => {
@@ -51,7 +48,7 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
   .then(person => {
     if (person){
@@ -66,7 +63,7 @@ app.get('/api/persons/:id', (request, response) => {
 
 
 //delete a person
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
   const id = Number(request.params.id)
   persons = persons.filter(person => person.id !== id)
 
@@ -126,6 +123,10 @@ app.put('/api/persons/:id', (request, response, next) => {
 })
 
 
+const unknownEndpoint = (request, response) => {
+  response.status(400).send({error: 'unknown endpoint'})
+}
+
 const errorHandler = (error, request, response, next) => {
   console.log(error.message)
 
@@ -137,8 +138,9 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
-app.use(errorHandler)
+
 app.use(unknownEndpoint) 
+app.use(errorHandler)
 
 
 const PORT = process.env.PORT
