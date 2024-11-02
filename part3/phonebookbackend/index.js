@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-require('dotenv').config();
+require('dotenv').config()
 const morgan = require('morgan')
 const Person = require('./models/person')
 
@@ -50,15 +50,15 @@ app.get('/api/persons', (request, response) => {
 
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
-  .then(person => {
-    if (person){
-      response.json(person.toJSON())
-    }
-    else {
-      response.status(404).end()
-    }
-  })
-  .catch(error => next(error))
+    .then(person => {
+      if (person){
+        response.json(person.toJSON())
+      }
+      else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
 
@@ -68,10 +68,10 @@ app.delete('/api/persons/:id', (request, response, next) => {
   persons = persons.filter(person => person.id !== id)
 
   Person.findByIdAndDelete(request.params.id)
-  .then(() => {
-    response.status(204).end()
-  })
-  .catch(error => next(error))
+    .then(() => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 //add person name
@@ -79,10 +79,10 @@ app.post('/api/persons', (request, response, next) => {
   const body = request.body
   const personName = body.name
   const personNumber = body.number
-  
+
   if (Object.keys(body).length === 0){
     return response.status(400).json({
-      error: "missing-content"
+      error: 'missing-content'
     })
   }
 
@@ -98,48 +98,48 @@ app.post('/api/persons', (request, response, next) => {
   })
 
   person.save()
-  .then(savedPerson => savedPerson.toJSON())
-  .then(savedAndFormattedPerson => {
-    console.log(`added ${person.name} number ${person.number} to phonebook`)
-    response.json(savedAndFormattedPerson)
-  })
-  .catch(error => next(error))
+    .then(savedPerson => savedPerson.toJSON())
+    .then(savedAndFormattedPerson => {
+      console.log(`added ${person.name} number ${person.number} to phonebook`)
+      response.json(savedAndFormattedPerson)
+    })
+    .catch(error => next(error))
 })
 
 
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
-  
+
   const person = {
     name: body.name,
     number: body.number
   }
 
-  Person.findByIdAndUpdate(request.params.id, person, {new: true})
-  .then(updatedPerson => {
-    response.json(updatedPerson)
-  })
-  .catch(error => next(error))
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
 })
 
 
 const unknownEndpoint = (request, response) => {
-  response.status(400).send({error: 'unknown endpoint'})
+  response.status(400).send({ error: 'unknown endpoint' })
 }
 
 const errorHandler = (error, request, response, next) => {
   console.log(error.message)
 
-  if (error.name === "CastError"){
-    return response.status(400).send({error: "Malformatted ID"})
-  } else if (error.name === "ValidationError"){
-    return response.status(400).send({error: error.message})
+  if (error.name === 'CastError'){
+    return response.status(400).send({ error: 'Malformatted ID' })
+  } else if (error.name === 'ValidationError'){
+    return response.status(400).send({ error: error.message })
   }
   next(error)
 }
 
 
-app.use(unknownEndpoint) 
+app.use(unknownEndpoint)
 app.use(errorHandler)
 
 

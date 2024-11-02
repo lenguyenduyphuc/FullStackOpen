@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import {useState, useEffect} from 'react'
 import Filter from './Components/Filter'
 import PersonForm from './Components/PersonForm'
 import Content from './Components/Content'
@@ -47,7 +47,7 @@ const App = () => {
             setMessage(null)
           }, 5000)
         })
-        .catch((error) => {
+        .catch(() => {
           setAllPersons(allPersons.filter(person => person.id !== updatedPerson.id))
           setNewName('')
           setNewNumber('')
