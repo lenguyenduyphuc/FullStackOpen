@@ -3,8 +3,8 @@ import Filter from './Components/Filter'
 import PersonForm from './Components/PersonForm'
 import Content from './Components/Content'
 import personService from './service/person'
-import Notification from './Components/Noti'
-import './App.css'
+import Notification from './Components/Notification'
+
 
 const App = () => {
   const [ persons, setPersons] = useState([])
@@ -84,7 +84,7 @@ const App = () => {
         setTimeout(() => {
           setMessage(null)
         },5000)
-        console.log(error.response.data.error)
+        console.log(error.response.data)
       })
     }
   }

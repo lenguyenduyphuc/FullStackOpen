@@ -1,9 +1,9 @@
-require('dotenv').config()
 const express = require('express')
 const app = express()
+const cors = require('cors')
+require('dotenv').config();
 const morgan = require('morgan')
-const cors =  require('cors')
-const Person = require('./models/phonebook')
+const Person = require('./models/person')
 
 let persons = []
 
@@ -25,6 +25,7 @@ app.use(morgan((tokens, req, res) => {
 const unknownEndpoint = (request, response) => {
   response.status(400).send({error: 'unknown endpoint'})
 }
+
 //get the persons info from the database
 app.get('/info', (request, response) => {
   const currentDate = new Date().toLocaleString()
@@ -41,6 +42,7 @@ app.get('/info', (request, response) => {
     )
   })
 })
+
 
 //get the persons from the database
 app.get('/api/persons', (request, response) => {
@@ -76,12 +78,12 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 //add person name
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
   const personName = body.name
   const personNumber = body.number
   
-  if (!personName || !personNumber){
+  if (Object.keys(body).length === 0){
     return response.status(400).json({
       error: "missing-content"
     })
@@ -93,14 +95,18 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  const person = {
+  const person = new Person ({
     name: personName,
-    number: personNumber,
-  }
-
-  person.save().then(savedPerson => {
-    response.json(savedPerson)
+    number: personNumber
   })
+
+  person.save()
+  .then(savedPerson => savedPerson.toJSON())
+  .then(savedAndFormattedPerson => {
+    console.log(`added ${person.name} number ${person.number} to phonebook`)
+    response.json(savedAndFormattedPerson)
+  })
+  .catch(error => next(error))
 })
 
 

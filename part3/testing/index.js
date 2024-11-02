@@ -80,7 +80,7 @@ app.delete('/api/notes/:id', (request, response, next) => {
 })
 
 app.put('/api/notes/:id', (request, response, next) => {
-  const {Content, importan} = request.body
+  const {content, important} = request.body
   
   const note = {
     content: body.content,
