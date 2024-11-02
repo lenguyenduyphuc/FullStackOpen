@@ -91,6 +91,7 @@ const App = () => {
 
   
   const handleDeletePerson =(id) => {
+    event.preventDefault()
     const filteredPerson = allPersons.filter(person => person.id === id)
     const personName = filteredPerson[0].name
     const personId = filteredPerson[0].id
@@ -121,6 +122,7 @@ const App = () => {
   }
 
   const handleFilterChange = (event) => {
+    event.preventDefault()
     setNewFilter(event.target.value)
     const regex = new RegExp( newFilter, 'i' );
     const filteredPersons = () => allPersons.filter(person => person.name.match(regex))
