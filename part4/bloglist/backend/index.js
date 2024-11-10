@@ -12,7 +12,7 @@ const blogSchema = new mongoose.Schema({
 
 const Blog = mongoose.model('Blog', blogSchema)
 
-const mongoUrl = 'mongodb://localhost/bloglist'
+const mongoUrl = 'mongodb+srv://phuc:phuc2208@cluster0.pezqi.mongodb.net/blog?retryWrites=true&w=majority&appName=Cluster0'
 mongoose.connect(mongoUrl)
 
 app.use(cors())
