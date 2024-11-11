@@ -23,7 +23,7 @@ export default [
       ],
       '@stylistic/js/linebreak-style': [
         'error',
-        '(process.platform === "win32" ? "windows" : "unix")'
+        'unix'
       ],
       '@stylistic/js/quotes': [
         'error',

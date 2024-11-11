@@ -23,7 +23,7 @@ export default [
       ],
       '@stylistic/js/linebreak-style': [
         'error',
-        'unix'
+        'window'
       ],
       '@stylistic/js/quotes': [
         'error',
