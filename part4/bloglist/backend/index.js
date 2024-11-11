@@ -27,7 +27,13 @@ app.post('/api/blogs', (request, response) => {
         })
 })
 
-app.delete('/api/blogs/:id', (request, response))
+app.delete('/api/blogs/:id', (request, response, next) => {
+    Blog.findByIdAndDelete(request.params.id)
+        .then(() => {
+            response.status(204).end()
+        })
+        .catch(error => next(error))
+})
 
 const PORT = 3003
 app.listen(PORT, () => {
