@@ -1,27 +1,9 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const mongoose = require('mongoose')
 require('dotenv').config()
 
-const blogSchema = new mongoose.Schema({
-    title: String,
-    author: String,
-    url: String,
-    likes: Number
-})
-
-const Blog = mongoose.model('Blog', blogSchema)
-
-const url = process.env.MONGODB_URI
-
-mongoose.connect(url)
-  .then(() => {
-    console.log('connected to MongoDB')
-  })
-  .catch((error) => {
-    console.log('error connecting to MongoDB:', error.message)
-  })
+const Blog = require('./models/blog')
 
 
 app.use(cors())
@@ -44,6 +26,8 @@ app.post('/api/blogs', (request, response) => {
             response.status(201).json(result)
         })
 })
+
+app.delete('/api/blogs/:id', (request, response))
 
 const PORT = 3003
 app.listen(PORT, () => {

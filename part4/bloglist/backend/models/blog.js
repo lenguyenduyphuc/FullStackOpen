@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-mongoose.set('strictQuery, false')
+mongoose.set('strictQuery', false)
 
 const url = process.env.MONGODB_URI
 
@@ -25,7 +25,7 @@ blogSchema.set('toJSON', {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
-        delete returnObject.__v
+        delete returnedObject.__v
     }
 })
 
