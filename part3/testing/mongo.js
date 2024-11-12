@@ -36,4 +36,10 @@ mongoose.connect(url).then(() => {
     })
     mongoose.connection.close()
   })
+
+  test('there are two notes', async () => {
+    const response = await api.get('/api/notes')
+
+    assert.strict
+  })
 })
