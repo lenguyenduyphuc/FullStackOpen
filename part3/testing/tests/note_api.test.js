@@ -1,4 +1,5 @@
-const { test, after, beforeEach, before } = require('node:test')
+const { test, after, beforeEach } = require('node:test')
+const assert = require('node:assert')
 const Note = require('../models/note')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
@@ -25,23 +26,23 @@ beforeEach(async () => {
   await noteObject.save()
 })
 
-test.only('notes are returned as json', async () => {
+test('notes are returned as json', async () => {
   await api
     .get('/api/notes')
     .expect(200)
     .expect('Content-Type', /application\/json/)
 })
 
-test.only('there are two notes', async () => {
+test('there are two notes', async () => {
   const response = await api.get('/api/notes')
 
-  assert.strictEqual(response.body.length, 2)
+  assert.strictEqual(response.body.length, initialNotes.length)
 })
 
-test.only('the first note is about HTTPS methods', async () => {
+test('the first note is about HTTP methods', async () => {
   const response = await api.get('/api/notes')
 
-  const contents = response.body.map(e =>  e.content)
+  const contents = response.body.map(e => e.content)
   assert(contents.includes('HTML is easy'))
 })
 
