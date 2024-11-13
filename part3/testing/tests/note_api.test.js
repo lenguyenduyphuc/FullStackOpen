@@ -82,6 +82,35 @@ test('note without content is not added', async () => {
   assert.strictEqual(notesAtEnd.length, helper.initialNotes.length)
 })
 
+test('a specific note can be viewed', async () => {
+  const noteAtStart = await helper.notesInDb()
+
+  const noteToView = noteAtStart[0]
+
+  const resultNote = await api
+  .get(`/api/notes/${noteToView.id}`)
+  .expect(200)
+  .expect('Content-Type', /application\/json/)
+
+  assert.deepStrictEqual(resultNote.body, noteToView)
+})
+
+test('a note can be deletetd', async () => {
+  const notesAtStart = await helper.notesInDb()
+  const notesToDelete = notesAtStart[0]
+
+  await api
+  .delete(`/api/notes/${notesToDelete.id}`)
+  .expect(204)
+
+  const notesAtEnd = await helper.notesInDb()
+
+  const contents = notesAtEnd.map(r => r.content)
+  assert(!contents.includes(notesToDelete.content))
+
+  assert.strictEqual(notesAtEnd.length, helper.initialNotes.length -1)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
