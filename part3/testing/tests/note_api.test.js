@@ -21,12 +21,10 @@ const initialNotes = [
 
 beforeEach(async () => {
   await Note.deleteMany({})
+  console.log('cleared')
 
-  let noteObject = new Note(helper.initialNotes[0])
-  await noteObject.save()
-
-  noteObject = new Note(helper.initialNotes[1])
-  await noteObject.save()
+  //Create an array of promises for saving each of the items to the database.
+  await Note.insertMany(helper.initialNotes)
 })
 
 test('notes are returned as json', async () => {
