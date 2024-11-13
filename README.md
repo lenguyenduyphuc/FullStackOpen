@@ -1,4 +1,4 @@
-# 🚀 fullstackopen Course
+# 🚀 FullStackOpen Course
 
 Welcome to my repository for the fullstackopen course from the University of Helsinki! This course is a comprehensive introduction to modern web application development with JavaScript.
 
@@ -40,10 +40,10 @@ The course is divided into 13 parts, each with its own set of exercises and assi
 Keep track of your progress through the fullstackopen course by checking off the completed parts below:
 
 ```
-- [ ] Part 0: Fundamentals of Web apps
-- [ ] Part 1: Introduction to React
-- [ ] Part 2: Communicating with server
-- [ ] Part 3: Programming a server with NodeJS and Express
+- [X] Part 0: Fundamentals of Web apps
+- [X] Part 1: Introduction to React
+- [X] Part 2: Communicating with server
+- [X] Part 3: Programming a server with NodeJS and Express
 - [ ] Part 4: Testing Express servers, user administration
 - [ ] Part 5: Testing React apps
 - [ ] Part 6: State management with Redux
