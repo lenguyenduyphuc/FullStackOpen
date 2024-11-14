@@ -54,7 +54,27 @@ test('Successfully create a new blog post', async () => {
 
     const blogsAtEnd = await helper.blogsInDb()
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+})
 
+test('Check the like property of the blogs', async () => {
+    const newBlog = {
+        _id: "5a422bc61b54a676234d17fc",
+        title: "Breh wars",
+        author: "Robert C. Martin",
+        url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+
+    const blogs = blogsAtEnd.find(r => r.title === "Breh wars")
+    assert.deepStrictEqual(blogs.likes, 0)
 })
 
 after(async () => {
