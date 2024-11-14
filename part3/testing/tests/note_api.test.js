@@ -8,17 +8,6 @@ const helper = require('./test_helper')
 
 const Note = require('../models/note')
 
-const initialNotes = [
-  {
-    content: 'HTML is easy',
-    important: false
-  },
-  {
-    content: 'Browser can execute only JS',
-    important: true,
-  },
-]
-
 beforeEach(async () => {
   await Note.deleteMany({})
   console.log('cleared')
