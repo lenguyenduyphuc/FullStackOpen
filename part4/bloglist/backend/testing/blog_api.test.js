@@ -77,6 +77,20 @@ test('Check the like property of the blogs', async () => {
     assert.deepStrictEqual(blogs.likes, 0)
 })
 
+test('Check the title or url properties', async () => {
+    const newBlog = {
+        _id: "035313233633",
+        title: "Testing title and url",
+        likes: 5
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
