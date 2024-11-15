@@ -106,6 +106,25 @@ test('Delete a single blog', async () => {
     assert(!contents.includes(blogToDelete.id))
 })
 
+test('Updated a new note', async () => {
+
+    const updatedBlog = {
+        _id: "5a422ba71b54a676234d17fb",
+        title: "It is a good thing",
+        author: "Robert C. Martin",
+        url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+        likes: 0,
+        __v: 0
+    }
+
+    await api
+        .put(`/api/blogs/${updatedBlog._id}`)
+        .send(updatedBlog)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
