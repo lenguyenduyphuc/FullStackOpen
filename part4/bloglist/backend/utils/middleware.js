@@ -12,6 +12,15 @@ const unknownEndpoint = (request, response) => {
     response.status(400).send({error: "unknownEndpoint"})
 }
 
+const tokenExtractor = (request, response, next) => {
+	const authorization = request.get('authorization')
+	if (authorization && authorization.startsWith('Bearer ')){
+		request.token = authorization.replace('Bearer ', '')
+	}
+
+	next()	
+}
+
 const errorHandler = (error, request, response, next) => {
     if (error.name === 'CastError') {
       return response.status(400).send({ error: 'malformatted id' })
@@ -31,5 +40,6 @@ const errorHandler = (error, request, response, next) => {
 module.exports = {
     requestLogger,
     unknownEndpoint,
-    errorHandler
+    errorHandler,
+	tokenExtractor
 }
