@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik5ndXllbiIsImlkIjoiNjczOGJmZjVlMzI1MDExMzg2NzhmZjJmIiwiaWF0IjoxNzMxNzc1ODQ5LCJleHAiOjE3MzE3Nzk0NDl9.sQH9KZRQE7IUkKhYt5XRRZW3IuyXt5vjHM_ErMrK2RU
+Authorization: Bearer 
 
 {
     "title": "It is wonderful",
