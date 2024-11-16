@@ -1,11 +1,11 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkJhbyIsImlkIjoiNjczOGY3YmY0YzlhNzcyMThkOWI1MWNhIiwiaWF0IjoxNzMxNzg3MjA2LCJleHAiOjE3MzE3OTA4MDZ9.HrATvyrZtYNXUaTTikBsNGa21HRIKLAIpm72kZrvzOw
 
 {
-    "title": "It is wonderful",
-    "author": "Jason Polock",
-    "url": "naiwyeqw61723",
-    "likes": "100",
-    "userId": "6738bff5e32501138678ff2f"
+    "title": "It is not good",
+    "author": "Mike Tyson",
+    "url": "1231231313",
+    "likes": "5326",
+    "userId": "6738bff5e32501138678ff2"
 }
