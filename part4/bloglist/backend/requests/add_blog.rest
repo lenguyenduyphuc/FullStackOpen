@@ -2,8 +2,9 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "Excited",
-    "author": "hehehehehe",
-    "url": "u34234242342342",
-    "likes": "86"
+    "title": "A fun vacation",
+    "author": "Nguyen Duy Phuc Le",
+    "url": "123123123123123123",
+    "likes": "5",
+    "userId": "6738bff5e32501138678ff2f"
 }
