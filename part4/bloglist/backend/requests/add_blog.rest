@@ -1,10 +1,11 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik5ndXllbiIsImlkIjoiNjczOGJmZjVlMzI1MDExMzg2NzhmZjJmIiwiaWF0IjoxNzMxNzc0MzgwfQ.OLn84uTP-u-ana_x7DC8Ru5Bc46f3xTyok2WXBjMWdI
 
 {
-    "title": "A fun vacation",
-    "author": "Nguyen Duy Phuc Le",
-    "url": "123123123123123123",
-    "likes": "5",
+    "title": "Not a so good day",
+    "author": "Micheal Jackson",
+    "url": "naiwyeqw61723",
+    "likes": "100",
     "userId": "6738bff5e32501138678ff2f"
 }

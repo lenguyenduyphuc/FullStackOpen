@@ -3,6 +3,7 @@ const express = require('express')
 require('express-async-errors')
 const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/user')
+const loginRouter = require('./controllers/login')
 const app = express()
 const cors = require('cors')
 require('dotenv').config()
@@ -28,7 +29,7 @@ app.use(middleware.requestLogger)
 
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
-
+app.use('/api/login', loginRouter)
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
