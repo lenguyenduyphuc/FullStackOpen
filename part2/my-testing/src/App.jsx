@@ -134,7 +134,6 @@ const App = () => {
       <h1>Notes</h1>
       <Notification message={errorMessage} />
 
-      {!user && loginForm()}
       {user === null ?
 				loginForm() :
 				<div>
