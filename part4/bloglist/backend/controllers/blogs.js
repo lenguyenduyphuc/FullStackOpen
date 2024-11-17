@@ -20,9 +20,6 @@ blogsRouter.get('/:id', async (request, response) => {
     }
 })
 
-blogsRouter.use(middleware.tokenExtractor);
-blogsRouter.use(middleware.userExtractor);
-
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
     const user = request.user
@@ -51,9 +48,9 @@ blogsRouter.delete('/:id', async (request, response, next) => {
 
     const blogToDelete = await Blog.findById(request.params.id)
 
-    if ( blogToDelete.user.id.toString() === user.id.toString() ) {
+    if ( blogToDelete.user._id.toString() === user._id.toString() ) {
         try {
-            await Blog.findByIdAndRemove(request.params.id)
+            await Blog.findByIdAndDelete(request.params.id)
             response.status(204).end()
           } catch (exception) {
             next(exception)
@@ -61,8 +58,7 @@ blogsRouter.delete('/:id', async (request, response, next) => {
     } else {
         return response.status(401).json({ error: `Unauthorized` })
     }
-})
-
+  })
 
 blogsRouter.put('/:id', async (request, response) => {
     const body = request.body 

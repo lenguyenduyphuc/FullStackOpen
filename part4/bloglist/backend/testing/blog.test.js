@@ -219,6 +219,8 @@ describe('Deletion of blogs and updated blogs', () => {
         await api
             .post('/api/users')
             .send(newUser)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
 
         const result = await api
             .post('/api/login')
@@ -240,6 +242,7 @@ describe('Deletion of blogs and updated blogs', () => {
             .send(newBlog)
             .set(headers)
             .expect(201)
+            .expect('Content-Type', /application\/json/)
       
         const blogsAtStart = await helper.blogsInDb()
         const blogToDelete = blogsAtStart.find(blog => blog.title === newBlog.title)
