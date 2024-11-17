@@ -12,13 +12,13 @@ blogsRouter.get('/', async (request, response) => {
 })
 
 blogsRouter.get('/:id', async (request, response) => {
-    const blog = await Blog.findById(request.params.id)
+  const blog = await Blog.findById(request.params.id)
 
-    if (blog){
-        response.json(blog)
-    } else {
-        response.status(404).end()
-    }
+  if (blog){
+    response.json(blog)
+  } else {
+    response.status(404).end()
+  }
 })
 
 blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
@@ -34,7 +34,7 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
     return response.status(400).json({ error: 'title or url missing' })
   }   
 
-  blog.likes = blog.likes | 0
+  blog.likes = blog.likes || 0
   blog.user = user
   user.blogs = user.blogs.concat(blog._id)
 
