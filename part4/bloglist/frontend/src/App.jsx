@@ -27,6 +27,7 @@ const App = () => {
     }
   }, [])
 
+
   const handleLogin = async (event) => {
     event.preventDefault()
 
@@ -43,6 +44,22 @@ const App = () => {
       setPassword('')
     } catch (exception) {
       setErrorMessage('Wrong credentials')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  const handleLogout = async (event) => {
+    event.preventDefault()
+
+    try {
+      window.localStorage.removeItem('loggedBlogappUser')
+      setUser(null)
+      setUsername('')
+      setPassword('')
+    } catch (exception) {
+      setErrorMessage('Already logged in')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -74,6 +91,12 @@ const App = () => {
     </form>
   )
 
+  const logoutForm = () => (
+    <form onSubmit={handleLogout}>
+      <button type='submit'>Log out</button>
+    </form>
+  )
+
   return (
     <div>
       <h2>Blogs</h2>
@@ -82,6 +105,7 @@ const App = () => {
         loginForm() :
         <div>
           <p>{user.name} log in </p>
+          {logoutForm()}
           {blogs.map(blog => 
             <Blog key={blog.id} blog={blog}/>
           )}
