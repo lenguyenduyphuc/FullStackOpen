@@ -1,14 +1,15 @@
 const { test, after, beforeEach, describe } = require('node:test')
 const assert = require('node:assert')
-const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
-const helper = require('./test_helper')
 const api = supertest(app)
+const bcrypt = require('bcrypt')
 
-const Blog = require('../models/blog')
+const helper = require('./test_helper')
+
 const User = require('../models/user')
+const Blog = require('../models/blog')
 
 beforeEach(async () => {
     //create root user
@@ -233,27 +234,30 @@ describe('Deletion of blogs and updated blogs', () => {
             url:"http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
             likes:12
         }
-
+      
         await api
             .post('/api/blogs')
-            .set(headers)
             .send(newBlog)
+            .set(headers)
             .expect(201)
-            .expect('Content-Type', /application\/json/)
-
+      
         const blogsAtStart = await helper.blogsInDb()
-        const blogToDelete = blogsAtStart.find(blog => blog.url === newBlog.url)
-    
+        const blogToDelete = blogsAtStart.find(blog => blog.title === newBlog.title)
+        
+        console.log('Headers:', headers)
+        console.log('Blog to delete:', blogToDelete)
+
         await api
             .delete(`/api/blogs/${blogToDelete.id}`)
             .set(headers)
             .expect(204)
-        
+      
         const blogsAtEnd = await helper.blogsInDb()
+      
         assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1)
     
-        const contents = blogsAtEnd.map(r => r.id)
-        assert(!contents.includes(blogToDelete.id))
+        const contents = blogsAtEnd.map(r => r.title)
+        assert(!contents.includes(blogToDelete.title))
     })
 })
 

@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkJhbyIsImlkIjoiNjczOGY3YmY0YzlhNzcyMThkOWI1MWNhIiwiaWF0IjoxNzMxNzg3MjA2LCJleHAiOjE3MzE3OTA4MDZ9.HrATvyrZtYNXUaTTikBsNGa21HRIKLAIpm72kZrvzOw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkJhbyIsImlkIjoiNjczOGY3YmY0YzlhNzcyMThkOWI1MWNhIiwiaWF0IjoxNzMxODA3NDM0LCJleHAiOjE3MzE4MTEwMzR9.A7K-Rgj6W63tGcZkR2kJk37hc37K3_mAhdQlLQ4BbFo
 
 {
-    "title": "It is not good",
+    "title": "It is extremely not good",
     "author": "Mike Tyson",
     "url": "1231231313",
     "likes": "5326",

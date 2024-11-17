@@ -1,1 +1,3 @@
-GET http://localhost:3003/api/blogs
+GET http://localhost:3003/api/blogs/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkJhbyIsImlkIjoiNjczOGY3YmY0YzlhNzcyMThkOWI1MWNhIiwiaWF0IjoxNzMxODA4MDkwLCJleHAiOjE3MzE4MTE2OTB9.2pwt74izHWMOfbHfWDfqs5A80IQRkMChwoFPlJ1zc3o
