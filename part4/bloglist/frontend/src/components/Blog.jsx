@@ -9,7 +9,7 @@ const Blog = ({blog, updatedBlog}) => {
     marginBottom: 5
   }
 
-  const updateBlog = (event) => {
+  const updateBlog = () => {
     const updatedBlogObject = ({
       ...blog,
       likes: blog.likes + 1,
