@@ -18,6 +18,7 @@ const BlogForm = ({ createBlog }) => {
 		setNewUrl('')
 	}
 
+
 	return (
 		<div>
 			<h2>Create new blog</h2>
@@ -45,7 +46,7 @@ const BlogForm = ({ createBlog }) => {
 				<div>
 					url
 						<input
-						type='text'
+						type='url'
 						value={newUrl}
 						name='URL: '
 						placeholder='URL'

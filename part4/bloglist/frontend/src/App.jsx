@@ -75,6 +75,24 @@ const App = () => {
       })
   }
 
+  const updateBlog = (objectToUpdate) => {
+    blogService
+      .update(objectToUpdate)
+      .then(returnedBlog => {
+        setBlogs(blogs.map(blog => blog.id === returnedBlog.id ? returnedBlog : blog))
+        setErrorMessage(`blog ${returnedBlog.title} has been liked `)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
+      .catch(error => {
+        setErrorMessage(`Error updating blog: ${error.message}`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
+  }
+
   const loginForm = () => {
     const hideWhenVisible = { display: loginVisible ? 'none' : '' }
     const showWhenVisible = { display: loginVisible ? '' : 'none' }
@@ -125,7 +143,7 @@ const App = () => {
           {logoutForm()}
           {createBlogForm()}
           {blogs.map(blog => 
-            <Blog key={blog.id} blog={blog}/>
+            <Blog key={blog.id} blog={blog} updatedBlog={updateBlog}/>
           )}
         </div>
       }
