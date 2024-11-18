@@ -1,21 +1,15 @@
 h1 {
     color: green;
     font-style: italic;
-}
-
-li {
+  }
+  
+  .note {
     color: grey;
-    padding: 5px 2px 2px;
+    padding-top: 3px;
     font-size: 15px;
-}
-
-.note {
-    color: grey;
-    padding-top: 5px;
-    font-size: 15px;
-}
-
-.error {
+  }
+  
+  .error {
     color: red;
     background: lightgrey;
     font-size: 20px;
@@ -23,4 +17,4 @@ li {
     border-radius: 5px;
     padding: 10px;
     margin-bottom: 10px;
-}
+  }
