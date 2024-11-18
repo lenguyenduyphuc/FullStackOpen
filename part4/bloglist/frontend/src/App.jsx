@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -15,6 +16,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
   const [loginVisible, setLoginVisible] = useState(false)
+  const [createVisible, setCreateVisible] = useState(false)
 
 
   useEffect(() => {
@@ -64,7 +66,7 @@ const App = () => {
     setPassword('')
   }
 
-  const createBlog = (event) => {
+  const handleCreateBlog = (event) => {
     event.preventDefault()
     const blogObject = {
       title: newTitle,
@@ -115,41 +117,30 @@ const App = () => {
     </form>
   )
 
-  const createBlogForm = () => (
-    <form onSubmit={createBlog}>
+  const createBlogForm = () => {
+    const hideWhenVisible = { dispplay : createVisible ? 'none' : ''}
+    const showWhenVisible = { display : createVisible ? '' : 'none'}
+
+    return (
       <div>
-        title
-          <input
-            type='text'
-            value={newTitle}
-            name='Title: '
-            placeholder='Title'
-            onChange={({ target }) => setNewTitle(target.value)}
+        <div style={hideWhenVisible}>
+          <button onClick={() => setCreateVisible(true)}>Create</button>
+        </div>
+        <div style={showWhenVisible}>
+          <BlogForm 
+            newTitle={newTitle}
+            newAuthor={newAuthor}
+            newUrl={newUrl}
+            handleTitleChange={({ target }) => setNewTitle(target.value)}
+            handleAuthorChange={({ target }) => setNewAuthor(target.value)}
+            handleUrlChange={({ target }) => setNewUrl(target.value)}
+            handleCreateBlog={handleCreateBlog}
           />
+          <button onClick= {() => setCreateVisible(false)}>Cancel create blogs</button>
+        </div>
       </div>
-      <div>
-        author
-          <input
-            type='text'
-            value={newAuthor}
-            name='Author: '
-            placeholder='Author'
-            onChange={({ target }) => setNewAuthor(target.value)}
-          />
-      </div>
-      <div>
-          url
-            <input
-              type='text'
-              value={newUrl}
-              name='URL: '
-              placeholder='URL'
-              onChange={({ target }) => setNewUrl(target.value)}
-            />
-      </div>
-      <button type='submit'>Create</button>
-    </form>
-  )
+    )
+  }
 
   return (
     <div>
