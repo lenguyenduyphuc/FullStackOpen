@@ -14,7 +14,6 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
   const [loginVisible, setLoginVisible] = useState(false)
-  const [createVisible, setCreateVisible] = useState(false)
 
 
   useEffect(() => {
