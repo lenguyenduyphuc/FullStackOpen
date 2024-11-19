@@ -6,11 +6,10 @@ import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './App.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
 
@@ -107,11 +106,8 @@ const App = () => {
 
   const handleLogout = async (event) => {
     event.preventDefault()
-
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
-    setUsername('')
-    setPassword('')
   }
 
 
