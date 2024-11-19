@@ -13,13 +13,28 @@ export default [
       },
       ecmaVersion: "latest",
     },
+    root: true,
+    env: {
+      browser: true,
+      es2020: true,
+      "vitest-globals/env": true
+    },
+    extends: [
+      'eslint:recommended',
+      'plugin:react/recommended',
+      'plugin:react/jsx-runtime',
+      'plugin:react-hooks/recommended',
+      'plugin:vitest-globals/recommended',
+    ],
+    ignorePatterns: ['dist', '.eslintrc.cjs'],
+    parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
     plugins: {
       '@stylistic/js': stylisticJs
     },
     rules: {
       '@stylistic/js/indent': [
         'error',
-        4
+        2
       ],
       '@stylistic/js/linebreak-style': [
         'error',
