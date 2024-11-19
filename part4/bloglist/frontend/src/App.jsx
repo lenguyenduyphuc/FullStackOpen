@@ -13,7 +13,6 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
-  const [loginVisible, setLoginVisible] = useState(false)
 
 
   useEffect(() => {
@@ -30,38 +29,6 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-
-
-  const handleLogin = async (event) => {
-    event.preventDefault()
-
-    try {
-      const user = await loginService.login({
-        username, password,
-      })
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
-      )
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
-      setErrorMessage('Error: Wrong username or password')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    }
-  }
-
-  const handleLogout = async (event) => {
-    event.preventDefault()
-
-    window.localStorage.removeItem('loggedBlogappUser')
-    setUser(null)
-    setUsername('')
-    setPassword('')
-  }
 
   const createBlog = (blogObject) => {
     blogService
@@ -104,41 +71,12 @@ const App = () => {
         }, 5000)
       })
       .catch(error => {
-        setErrorMessage(`Error deleting blog: ${error.message}`)
+        setErrorMessage(`Error deleting blog: You are not the creator}`)
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
       })
   }
-
-  const loginForm = () => {
-    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
-    const showWhenVisible = { display: loginVisible ? '' : 'none' }
-
-    return (
-      <div>
-        <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>log in</button>
-        </div>
-        <div style={showWhenVisible}>
-          <LoginForm
-            username={username}
-            password={password}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin}
-          />
-          <button onClick={() => setLoginVisible(false)}>cancel</button>
-        </div>
-      </div>
-    )
-  }
-
-  const logoutForm = () => (
-    <form onSubmit={handleLogout}>
-      <button type='submit'>Log out</button>
-    </form>
-  )
 
   const createBlogForm = () => {
     return (
@@ -148,6 +86,49 @@ const App = () => {
         </div>
       </Togglable>
     )
+  }
+
+  const handleLogin = async (credentials) => {
+
+    try {
+      const user = await loginService.login(credentials)
+      window.localStorage.setItem(
+        'loggedBlogappUser', JSON.stringify(user)
+      )
+      blogService.setToken(user.token)
+      setUser(user)
+    } catch (exception) {
+      setErrorMessage('Error: Wrong username or password')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  const handleLogout = async (event) => {
+    event.preventDefault()
+
+    window.localStorage.removeItem('loggedBlogappUser')
+    setUser(null)
+    setUsername('')
+    setPassword('')
+  }
+
+
+  const logoutForm = () => (
+    <form onSubmit={handleLogout}>
+      <button type='submit'>Log out</button>
+    </form>
+  )
+
+  const loginForm = () => {
+   return (
+    <Togglable buttonLabel='login'>
+      <div>
+        <LoginForm createLogin = {handleLogin}/>
+      </div>
+    </Togglable>
+   )
   }
 
   return (
