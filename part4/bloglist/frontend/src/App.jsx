@@ -138,7 +138,7 @@ const App = () => {
           {logoutForm()}
           {createBlogForm()}
           {blogs.sort((a,b) => b.likes - a.likes).map(blog => 
-            <Blog key={blog.id} blog={blog} updatedBlog={updateBlog} removedBlog={removeBlog}/>
+            <Blog key={blog.id} blog={blog} updatedBlog={updateBlog} removedBlog={removeBlog} user={user}/>
           )}
         </div>
       }

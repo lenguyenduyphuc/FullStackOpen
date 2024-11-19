@@ -23,7 +23,7 @@ export default [
       ],
       '@stylistic/js/linebreak-style': [
         'error',
-        'window'
+        'windows'
       ],
       '@stylistic/js/quotes': [
         'error',
@@ -45,6 +45,6 @@ export default [
     },
   },
   { 
-    ignores: ["dist/**", "build/**"],
+    ignores: ["dist/**", "build/**", "node_modules/**"],
   },
 ]

@@ -32,3 +32,11 @@ const LoginForm = ({
 }
 
 export default LoginForm
+
+LoginForm.prototype = {
+  handleSubmit: PropTypes.func.isRequired,
+  handleUsernameChange: PropTypes.func.isRequired,
+  handlePasswordChange: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired
+}

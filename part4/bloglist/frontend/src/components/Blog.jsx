@@ -13,7 +13,7 @@ const Blog = ({blog, updatedBlog, removedBlog, user}) => {
     const updatedBlogObject = ({
       ...blog,
       likes: blog.likes + 1,
-      id: blog.id
+      user: blog.user
     })
     updatedBlog(updatedBlogObject)
   }
@@ -23,7 +23,9 @@ const Blog = ({blog, updatedBlog, removedBlog, user}) => {
       removedBlog(blog)
     }
   }
- 
+
+  const isOwner = blog.user && user && blog.user.id === user.id
+
   const [visible, setVisible] = useState(true) 
 
   const hideWhenVisible = { display: visible ? 'none' : ''}
@@ -45,7 +47,9 @@ const Blog = ({blog, updatedBlog, removedBlog, user}) => {
           {blog.likes}
           <button onClick={updateBlog}>Like</button><br/>
           <button onClick={removeBlog}>Delete</button><br/>
-          {user}
+          {isOwner && (
+            <span>{user.name}</span>
+          )}
         </div>
       </div>
     </div>
