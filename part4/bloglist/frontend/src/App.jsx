@@ -93,6 +93,24 @@ const App = () => {
       })
   }
 
+  const removeBlog = (objectToDelete) => {
+    blogService
+      .remove(objectToDelete.id)
+      .then(()=> {
+        setBlogs(blogs.filter(blog => blog.id !== objectToDelete.id))
+        setErrorMessage(`blog ${objectToDelete.title} has been deleted`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
+      .catch(error => {
+        setErrorMessage(`Error deleting blog: ${error.message}`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
+  }
+
   const loginForm = () => {
     const hideWhenVisible = { display: loginVisible ? 'none' : '' }
     const showWhenVisible = { display: loginVisible ? '' : 'none' }
@@ -143,7 +161,7 @@ const App = () => {
           {logoutForm()}
           {createBlogForm()}
           {blogs.sort((a,b) => b.likes - a.likes).map(blog => 
-            <Blog key={blog.id} blog={blog} updatedBlog={updateBlog}/>
+            <Blog key={blog.id} blog={blog} updatedBlog={updateBlog} removedBlog={removeBlog}/>
           )}
         </div>
       }
