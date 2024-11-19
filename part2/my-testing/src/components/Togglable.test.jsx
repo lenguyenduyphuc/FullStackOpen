@@ -41,7 +41,7 @@ describe('<Togglable/>', () => {
         const closeButton = screen.getByText('cancel')
         await user.click(closeButton)
 
-        const div = container.querySelector('.togglaleContent')
+        const div = container.querySelector('.togglableContent')
         expect(div).toHaveStyle('display: none')
     })
 })
