@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({blog, updatedBlog, removedBlog, user}) => {
+const Blog = ({blog, updatedBlog, removedBlog}) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -9,11 +9,11 @@ const Blog = ({blog, updatedBlog, removedBlog, user}) => {
     marginBottom: 5
   }
 
-  const updateBlog = () => {
+  const updateBlog = (event) => {
+    event.preventDefault()
     const updatedBlogObject = ({
       ...blog,
       likes: blog.likes + 1,
-      user: blog.user
     })
     updatedBlog(updatedBlogObject)
   }
@@ -23,8 +23,6 @@ const Blog = ({blog, updatedBlog, removedBlog, user}) => {
       removedBlog(blog)
     }
   }
-
-  const isOwner = blog.user && user && blog.user.id === user.id
 
   const [visible, setVisible] = useState(true) 
 
@@ -47,9 +45,7 @@ const Blog = ({blog, updatedBlog, removedBlog, user}) => {
           {blog.likes}
           <button onClick={updateBlog}>Like</button><br/>
           <button onClick={removeBlog}>Delete</button><br/>
-          {isOwner && (
-            <span>{user.name}</span>
-          )}
+          {blog.user ? blog.user.name : "Unknown user"}
         </div>
       </div>
     </div>

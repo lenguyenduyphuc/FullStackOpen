@@ -70,7 +70,7 @@ const App = () => {
         }, 5000)
       })
       .catch(error => {
-        setErrorMessage(`Error deleting blog: You are not the creator}`)
+        setErrorMessage(`Error deleting blog: You are not the creator`)
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)

@@ -1,7 +1,10 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
+import { expect } from 'chai'
 
-test('renders content', () => {
+
+describe('Blog components test', () => {
     const blog = {
         title: 'how to live a good life',
         author: 'Superman',
@@ -11,11 +14,23 @@ test('renders content', () => {
 
     let mockUpdateBlog = vi.fn()
     let mockRemoveBlog = vi.fn()
-    let mockUser = vi.fn()
 
-    const { container } = render(<Blog blog={blog} updatedBlog={mockUpdateBlog} removedBlog={mockRemoveBlog} user={mockUser}/>)
-    screen.debug()
+    test('renders content', () => {
+        const { container } = render(<Blog blog={blog} updatedBlog={mockUpdateBlog} removedBlog={mockRemoveBlog}/>)
+        screen.debug()
+    
+        expect(container).toHaveTextContent('how to live a good life')
+    })
+    
+    test('renders URL and likes', async () => {
+        const { container } = render(<Blog blog={blog} updatedBlog={mockUpdateBlog} removedBlog={mockRemoveBlog}/>)
 
-    expect(container).toHaveTextContent('how to live a good life')
+        const user = userEvent.setup()
+        const button = screen.getByText('View')
+        await user.click(button)
+
+        expect(container).toHaveTextContent("https://reactpatterns.com/")
+        expect(container).toHaveTextContent("7")
+        
+    })
 })
-
