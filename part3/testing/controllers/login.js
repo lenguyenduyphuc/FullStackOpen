@@ -2,11 +2,10 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
 const User = require('../models/user')
-require('dotenv').config();
-
 
 loginRouter.post('/', async (request, response) => {
   const { username, password } = request.body
+
 
   const user = await User.findOne({ username })
   const passwordCorrect = user === null
@@ -24,12 +23,7 @@ loginRouter.post('/', async (request, response) => {
     id: user._id,
   }
 
-  //token expires in 60*60 seconds, that is, in one hour
-  const token = jwt.sign(
-    userForToken, 
-    process.env.SECRET,
-    { expiresIn: 60*60}
-)
+  const token = jwt.sign(userForToken, process.env.SECRET)
 
   response
     .status(200)
