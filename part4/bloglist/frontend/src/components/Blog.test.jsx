@@ -31,6 +31,15 @@ describe('Blog components test', () => {
 
         expect(container).toHaveTextContent("https://reactpatterns.com/")
         expect(container).toHaveTextContent("7")
-        
+    })
+
+    test('renders check like button', async () => {
+        const { container } = render(<Blog blog={blog} updatedBlog={mockUpdateBlog} removedBlog={mockRemoveBlog}/>)
+        const user = userEvent.setup()
+        const button = screen.getByText('Like')
+        await user.click(button)
+        await user.click(button)
+
+        expect(mockUpdateBlog.mock.calls).toHaveLength(2)
     })
 })
