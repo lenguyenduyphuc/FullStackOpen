@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
-import { expect } from 'chai'
 
 
 describe('Blog components test', () => {
@@ -37,8 +36,7 @@ describe('Blog components test', () => {
         const { container } = render(<Blog blog={blog} updatedBlog={mockUpdateBlog} removedBlog={mockRemoveBlog}/>)
         const user = userEvent.setup()
         const button = screen.getByText('Like')
-        await user.click(button)
-        await user.click(button)
+        await user.dblClick(button)
 
         expect(mockUpdateBlog.mock.calls).toHaveLength(2)
     })
