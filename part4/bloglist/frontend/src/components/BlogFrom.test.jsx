@@ -25,6 +25,7 @@ describe('Test blog form functionality', () => {
 
         expect(mockCreate.mock.calls).toHaveLength(1)
         console.log(mockCreate.mock.calls[0][0])
+        //expect(mockCreate.mock.calls[0][0].title).toBe('testing a blog form...')
         expect(mockCreate.mock.calls[0][0]).toEqual({
             title: 'testing a blog form...',
             author: 'Dung',
