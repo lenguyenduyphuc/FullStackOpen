@@ -3,7 +3,7 @@ import { beforeEach, describe } from 'node:test'
 
 describe('Note app', () => {
   beforeEach(async ({ page, request }) => {
-    await request.post('http://localhost:3001/api/testing/reset')
+    await request.post('http:localhost:3001/api/testing/reset')
     await request.post('http://localhost:3001/api/users', {
       data: {
         name: 'Matti Luukkainen',
@@ -21,11 +21,12 @@ describe('Note app', () => {
     await expect(page.getByText('Note app, Department of Computer Science, University of Helsinki 2024')).toBeVisible()
   })
 
-  test('user can log in', async ({ page }) => {
+  test('login form can be opened', async ({ page }) => {
     await page.getByRole('button', { name: 'log in' }).click()
     await page.getByTestId('username').fill('mluukkai')
     await page.getByTestId('password').fill('salainen')
     await page.getByRole('button', { name: 'login' }).click()
+  
     await expect(page.getByText('Matti Luukkainen logged in')).toBeVisible()
   })
 
@@ -41,20 +42,34 @@ describe('Note app', () => {
       await page.getByRole('button', { name: 'new note' }).click()
       await page.getByRole('textbox').fill('a note created by playwright')
       await page.getByRole('button', { name: 'save' }).click()
-      await expect(page.getByText('a note created by playwright')).toBeVisible()
-    })
-  })
-  
-  describe('and a note exists', () => {
-    beforeEach(async ({ page }) => {
-      await page.getByRole('button', { name: 'new note' }).click()
-      await page.getByRole('textbox').fill('another note by playwright')
-      await page.getByRole('button', { name: 'save' }).click()
+      await expect(await page.getByText('a note created by playwright')).toBeVisible()
     })
 
-    test('importance can be changed', async ({ page }) => {
-      await page.getByRole('button', { name: 'make not important' }).click()
-      await expect(page.getByText('make important')).toBeVisible()
+    describe('and a note exists', () => {
+      beforeEach(async ({ page }) => {
+        await page.getByRole('button', { name: 'new note' }).click()
+        await page.getByRole('textbox').fill('another note by playwright')
+        await page.getByRole('button', { name: 'save' }).click()
+      })
+  
+      test('importance can be changed', async ({ page }) => {
+        await page.getByRole('button', { name: 'make not important' }).click()
+        await expect(await page.getByText('make important')).toBeVisible()
+      })
     })
-  })
+
+    test('login fails with wrong password', async ({ page }) =>{
+      await page.getByRole('button', { name: 'log in' }).click()
+      await page.getByTestId('username').fill('mluukkai')
+      await page.getByTestId('password').fill('wrong')
+      await page.getByRole('button', { name: 'login' }).click()
+    
+      const errorDiv = await page.locator('.error')
+      await expect(errorDiv).toContainText('wrong credentials')
+      await expect(errorDiv).toHaveCSS('border-style', 'solid')
+      await expect(errorDiv).toHaveCSS('color', 'rgb(255, 0, 0)')
+    
+      await expect(page.getByText('Matti Luukkainen logged in')).not.toBeVisible()
+    })
+  })  
 })
