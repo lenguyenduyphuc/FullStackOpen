@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { beforeEach, describe } from 'node:test'
-const { loginWith } = require('./helper')
+import { loginWith } from './helper'
 
 describe('Note app', () => {
   beforeEach(async ({ page, request }) => {
