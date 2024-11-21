@@ -7,14 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "test": "playwright test",
-    "test:report": "playwright show-report",
     "preview": "vite preview",
-    "server": "json-server -p3001 --watch db.json"
+    "server": "json-server -p3001 --watch db.json",
+    "test": "vitest run"
   },
   "dependencies": {
     "axios": "^1.7.7",
     "prop-types": "^15.8.1",
+    "props-type": "^1.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -26,18 +26,19 @@
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
     "@types/node": "^22.9.1",
-    "@types/react": "^18.3.11",
+    "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react-swc": "^3.5.0",
-    "eslint": "^9.14.0",
-    "eslint-plugin-react": "^7.37.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "@vitejs/plugin-react-swc": "^3.7.1",
+    "eslint": "^9.15.0",
+    "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-react-refresh": "^0.4.13",
+    "eslint-plugin-react-refresh": "^0.4.14",
     "eslint-plugin-vitest-globals": "^1.5.0",
     "globals": "^15.12.0",
     "jsdom": "^25.0.1",
     "json-server": "^1.0.0-beta.3",
-    "vite": "^5.4.9",
+    "vite": "^5.4.11",
     "vitest": "^2.1.5"
   }
 }
