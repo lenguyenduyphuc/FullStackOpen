@@ -12,4 +12,15 @@ describe('Blog app', () => {
     await page.getByRole('button', {name: 'login'}).click()
     await expect(login).toBeVisible()
   })
+
+  describe('Login', () => {
+    test('succeeds with correct credentials', async ({ page }) => {
+      await page.getByRole('button', { name: 'login'}).click()
+      await page.getByTestId('username').fill('Tien')
+      await page.getByTestId('password').fill('12345')
+
+      await page.getByRole('button', { name: 'Log in' }).click()
+      await expect(page.getByText('Lam Tien Dung log in')).toBeVisible()
+    })
+  })
 })
