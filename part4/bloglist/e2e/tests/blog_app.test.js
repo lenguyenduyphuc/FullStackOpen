@@ -22,5 +22,13 @@ describe('Blog app', () => {
       await page.getByRole('button', { name: 'Log in' }).click()
       await expect(page.getByText('Lam Tien Dung log in')).toBeVisible()
     })
+
+    test('fails with wrong credentials', async ({page}) => {
+      await page.getByRole('button', { name: 'login'}).click()
+      await page.getByTestId('username').fill('Phuc')
+      await page.getByTestId('password').fill('123456')
+      await page.getByRole('button', ({ name: 'Log in'})).click()
+      await expect(page.getByText('Error: Wrong username or password')).toBeVisible()
+    })
   })
 })
