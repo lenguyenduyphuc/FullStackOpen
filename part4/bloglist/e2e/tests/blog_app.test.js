@@ -1,4 +1,6 @@
 const { test, expect, beforeEach, describe} = require('@playwright/test')
+const { loginWith, createBlog } = require('./helper')
+
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request}) => {
@@ -10,7 +12,7 @@ describe('Blog app', () => {
         password: '12345'
       }
     })
-
+  
     await page.goto('http://localhost:5173')
   })
 
@@ -24,19 +26,12 @@ describe('Blog app', () => {
 
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
-      await page.getByRole('button', { name: 'login'}).click()
-      await page.getByTestId('username').fill('Tien')
-      await page.getByTestId('password').fill('12345')
-
-      await page.getByRole('button', { name: 'Log in' }).click()
+      await loginWith(page, 'Tien', '12345')
       await expect(page.getByText('Lam Tien Dung log in')).toBeVisible()
     })
 
     test('fails with wrong credentials', async ({page}) => {
-      await page.getByRole('button', { name: 'login'}).click()
-      await page.getByTestId('username').fill('Phuc')
-      await page.getByTestId('password').fill('123456')
-      await page.getByRole('button', ({ name: 'Log in'})).click()
+      await loginWith(page, 'Phuc', '123456')
       await expect(page.getByText('Login Form')).toBeVisible()
     })
   })
@@ -52,26 +47,17 @@ describe('When logged in', () => {
         password: '12345'
       }
     })
-
+  
     await page.goto('http://localhost:5173')
   })
 
   test('a new blog can be created', async ({ page }) => {
-    await page.getByRole('button', { name: 'login'}).click()
-    await page.getByTestId('username').fill('Tien')
-    await page.getByTestId('password').fill('12345')
+    await loginWith(page, 'Tien', '12345')
 
-    await page.getByRole('button', { name: 'Log in' }).click()
-    await expect(page.getByText('Lam Tien Dung log in')).toBeVisible()
+    await createBlog(page, 'A test title', 'A test author', 'https://fullstackopen.com/en/part5/end_to_end_testing_playwright')
 
-    await page.getByRole('button', { name: 'new blog'}).click()
-    await page.getByTestId('title').fill('A test title')
-    await page.getByTestId('author').fill('A test author')
-    await page.getByTestId('url').fill('https://fullstackopen.com/en/part5/end_to_end_testing_playwright')
-    await page.getByRole('button', { name: 'Create' }).click()
-
-    await expect(page.getByText('A test title')).toBeVisible()
-    await expect(page.getByText('A test author')).toBeVisible()
+    await expect(page.getByText('a new blog A test title by A test author added')).toBeVisible()
     await expect(page.getByText('https://fullstackopen.com/en/part5/end_to_end_testing_playwright')).toBeVisible()
   })
+
 })
