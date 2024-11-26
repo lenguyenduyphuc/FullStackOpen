@@ -37,7 +37,41 @@ describe('Blog app', () => {
       await page.getByTestId('username').fill('Phuc')
       await page.getByTestId('password').fill('123456')
       await page.getByRole('button', ({ name: 'Log in'})).click()
-      await expect(page.getByText('Error: Wrong username or password')).toBeVisible()
+      await expect(page.getByText('Login Form')).toBeVisible()
     })
+  })
+})
+
+describe('When logged in', () => {
+  beforeEach(async ({ page, request}) => {
+    await request.post('http://localhost:3003/api/testing/reset')
+    await request.post('http://localhost:3003/api/users', {
+      data: {
+        name: 'Lam Tien Dung',
+        username: 'Tien',
+        password: '12345'
+      }
+    })
+
+    await page.goto('http://localhost:5173')
+  })
+
+  test('a new blog can be created', async ({ page }) => {
+    await page.getByRole('button', { name: 'login'}).click()
+    await page.getByTestId('username').fill('Tien')
+    await page.getByTestId('password').fill('12345')
+
+    await page.getByRole('button', { name: 'Log in' }).click()
+    await expect(page.getByText('Lam Tien Dung log in')).toBeVisible()
+
+    await page.getByRole('button', { name: 'new blog'}).click()
+    await page.getByTestId('title').fill('A test title')
+    await page.getByTestId('author').fill('A test author')
+    await page.getByTestId('url').fill('https://fullstackopen.com/en/part5/end_to_end_testing_playwright')
+    await page.getByRole('button', { name: 'Create' }).click()
+
+    await expect(page.getByText('A test title')).toBeVisible()
+    await expect(page.getByText('A test author')).toBeVisible()
+    await expect(page.getByText('https://fullstackopen.com/en/part5/end_to_end_testing_playwright')).toBeVisible()
   })
 })
