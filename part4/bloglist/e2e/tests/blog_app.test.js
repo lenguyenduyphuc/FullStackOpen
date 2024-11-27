@@ -60,4 +60,12 @@ describe('When logged in', () => {
     await expect(page.getByText('https://fullstackopen.com/en/part5/end_to_end_testing_playwright')).toBeVisible()
   })
 
+  test('the blog can be liked', async ({ page })=> {
+    await loginWith(page, 'Tien', '12345')
+    await createBlog(page, 'A test title', 'A test author', 'https://fullstackopen.com/en/part5/end_to_end_testing_playwright')
+
+    await page.getByRole('button', { name: 'like'}).click()
+    await expect(page.getByText('1')).toBeVisible()
+  })
+
 })
