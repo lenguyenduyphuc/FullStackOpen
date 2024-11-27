@@ -60,7 +60,8 @@ const App = () => {
   }
 
   const removeBlog = (objectToDelete) => {
-    blogService
+    if (window.confirm(`Remove blog ${objectToDelete.title} by ${objectToDelete.author}`)){
+      blogService
       .remove(objectToDelete.id)
       .then(()=> {
         setBlogs(blogs.filter(blog => blog.id !== objectToDelete.id))
@@ -75,6 +76,7 @@ const App = () => {
           setErrorMessage(null)
         }, 5000)
       })
+    }
   }
 
   const createBlogForm = () => {
@@ -138,7 +140,7 @@ const App = () => {
           {logoutForm()}
           {createBlogForm()}
           {blogs.sort((a,b) => b.likes - a.likes).map(blog => 
-            <Blog key={blog.id} blog={blog} updatedBlog={updateBlog} removedBlog={removeBlog}/>
+            <Blog key={blog.id} blog={blog} updatedBlog={updateBlog} removedBlog={removeBlog} currentUser={user}/>
           )}
         </div>
       }
