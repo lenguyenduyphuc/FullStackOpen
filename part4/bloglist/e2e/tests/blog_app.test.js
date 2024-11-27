@@ -68,4 +68,15 @@ describe('When logged in', () => {
     await expect(page.getByText('1')).toBeVisible()
   })
 
+  test('Ensures that the user who added the blog can delete the blog', async ({ page }) => {
+    await loginWith(page, 'Tien', '12345')
+    await createBlog(page, 'A test title', 'A test author', 'https://fullstackopen.com/en/part5/end_to_end_testing_playwright')
+
+    page.on('dialog', async (dialog) => {
+      await dialog.accept()
+    })
+
+    await page.getByRole('button', {name: 'Delete'}).click()
+    await expect(page.getByText('A test title A test author')).not.toBeVisible()
+  })
 })
