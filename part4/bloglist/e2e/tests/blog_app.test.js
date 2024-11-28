@@ -12,6 +12,14 @@ describe('Blog app', () => {
         password: '12345'
       }
     })
+
+    await request.post('http://localhost:3003/api/users', {
+      data: {
+        name: 'Le Nguyen Duy Phuc',
+        username: 'Phuc',
+        password: '123456'
+      }
+    })
   
     await page.goto('http://localhost:5173')
   })
@@ -47,12 +55,20 @@ describe('When logged in', () => {
         password: '12345'
       }
     })
+
+    await request.post('http://localhost:3003/api/users', {
+      data: {
+        name: 'Le Nguyen Duy Phuc',
+        username: 'Phuc',
+        password: '123456'
+      }
+    })
   
     await page.goto('http://localhost:5173')
   })
 
   test('a new blog can be created', async ({ page }) => {
-    await loginWith(page, 'Tien', '12345')
+    await loginWith(page, 'Tien', '12345')-
 
     await createBlog(page, 'A test title', 'A test author', 'https://fullstackopen.com/en/part5/end_to_end_testing_playwright')
 
@@ -78,5 +94,19 @@ describe('When logged in', () => {
 
     await page.getByRole('button', {name: 'Delete'}).click()
     await expect(page.getByText('A test title A test author')).not.toBeVisible()
+  })
+
+  test('Ensures that only the user who added the blog sees the blogs remove button', async ({ page }) => {
+    await loginWith(page, 'Tien', '12345')
+    await createBlog(page, 'A test title', 'A test author', 'https://fullstackopen.com/en/part5/end_to_end_testing_playwright')
+
+    await expect(page.getByText('A test title A test author')).toBeVisible()
+
+    await page.getByRole('button', { name : 'Log out'}).click()
+    
+    await loginWith(page, 'Phuc', '123456')
+
+    await expect(page.getByRole('button', {name: 'Delete'})).not.toBeVisible()
+    await expect(page.getByText('Unknown user')).toBeVisible()
   })
 })
