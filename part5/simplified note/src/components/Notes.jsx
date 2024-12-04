@@ -11,9 +11,12 @@ const Note = ({ note, handleClick }) => {
 }
 
 const Notes = () => {
-
   const dispatch = useDispatch()
   const notes = useSelector(state => state)
+
+  const filterSelected = (value) => {
+    console.log(value)
+  }
 
   return(
     <ul>
