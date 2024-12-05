@@ -4,8 +4,8 @@ const { loginWith, createBlog } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request}) => {
-    await request.post('http://localhost:3003/api/testing/reset')
-    await request.post('http://localhost:3003/api/users', {
+    await request.post('/api/tests/reset')
+    await request.post('/api/users', {
       data: {
         name: 'Lam Tien Dung',
         username: 'Tien',
@@ -37,8 +37,8 @@ describe('Blog app', () => {
 
 describe('When logged in', () => {
   beforeEach(async ({ page, request}) => {
-    await request.post('http://localhost:3003/api/testing/reset')
-    await request.post('http://localhost:3003/api/users', {
+    await request.post('/api/testing/reset')
+    await request.post('/api/users', {
       data: {
         name: 'Lam Tien Dung',
         username: 'Tien',
@@ -46,7 +46,7 @@ describe('When logged in', () => {
       }
     })
 
-    await request.post('http://localhost:3003/api/users', {
+    await request.post('/api/users', {
       data: {
         name: 'Le Nguyen Duy Phuc',
         username: 'Phuc',
@@ -102,8 +102,8 @@ describe('When logged in', () => {
 
 describe('Checking the arrangement', () => {
   beforeEach(async ({ page, request}) => {
-    await request.post('http://localhost:3003/api/testing/reset')
-    await request.post('http://localhost:3003/api/users', {
+    await request.post('/api/testing/reset')
+    await request.post('/api/users', {
       data: {
         name: 'Lam Tien Dung',
         username: 'Tien',

@@ -7,8 +7,13 @@ const FilterAnecdote = () => {
 	const handleChange = (event) => {
 		dispatch(filterChange(event.target.value))
 	}
+
+	const style = {
+    marginBottom: 10
+  }
+
   return (
-    <div>
+    <div style={style}>
 			Filter:
       <input 
 				type='text'
