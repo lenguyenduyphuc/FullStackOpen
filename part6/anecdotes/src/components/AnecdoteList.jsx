@@ -1,12 +1,18 @@
 import { useDispatch, useSelector } from "react-redux"
 import { voteAnecdote } from "../reducers/anecdoteReducer"
+import { hideNotification, voteNotification } from "../reducers/notificationReducer"
 
 const AnecdoteList = () => {
   const dispatch = useDispatch()
 
-  const vote = (id) => {
+  const vote = (id, content) => {
     console.log('vote', id)
+    console.log('vote', content)
     dispatch(voteAnecdote(id))
+    dispatch(voteNotification(content))
+    setTimeout(() => {
+      dispatch(hideNotification(null));
+    }, 5000);
   }
 
   const anecdotes = useSelector(state => {
@@ -15,7 +21,6 @@ const AnecdoteList = () => {
     }
     else {
       const regex = new RegExp(state.filter, 'i')
-      // console.log(regex)
       const newFilter = state.anecdotes.filter((anecdote) => anecdote.content.match(regex))
       console.log(newFilter)
       return newFilter
@@ -32,7 +37,7 @@ const AnecdoteList = () => {
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => vote(anecdote.id, anecdote.content)}>vote</button>
           </div>
         </div>
       )}
