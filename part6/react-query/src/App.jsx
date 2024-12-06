@@ -6,8 +6,9 @@ const App = () => {
   
   const NewNoteMutation =  useMutation({ 
     mutationFn: createNote,
-    onSuccess: () => {
-     queryClient.invalidateQueries({ queryKey: ['notes'] })
+    onSuccess: (newNote) => {
+     const notes = queryClient.getQueryData(['notes'])
+     queryClient.setQueryData(['notes'], notes.concat(newNote))
     }
   })
   const addNote = async (event) => {
@@ -19,7 +20,7 @@ const App = () => {
   const UpdateNoteMutation = useMutation({
     mutationFn: updateNote,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notes']})
+      queryClient.invalidateQueries({ queryKey: ['notes'] })
     }
   })
 
