@@ -7,13 +7,13 @@ const Anecdote = ({ anecdote }) => {
   const dispatch = useDispatch()
 
   const vote = () => {
+    console.log(anecdote)
     dispatch(voteAnecdote(anecdote))
-    dispatch(voteNotification(anecdote))
+    dispatch(voteNotification(anecdote.content))
     setTimeout(() => {
       dispatch(hideNotification(null));
     }, 5000);
   }
-  console.log((anecdote))
 
   return (
     <div>
@@ -45,7 +45,7 @@ const AnecdoteList = () => {
     <div>
       <h2>Anecdotes</h2>
       {[...anecdotes].sort(byVotes).map(anecdote =>
-         <Anecdote key={anecdote.id} anecdote={anecdote} />
+         <Anecdote key={anecdote.id} anecdote={anecdote} id={anecdote.id} />
       )}
     </div>
   )
