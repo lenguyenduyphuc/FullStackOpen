@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-
+import noteService from './services/notes'
 // const anecdoteReducer = (state = initialState, action) => {
 //   switch(action.type){
 //     case 'NEW_ANECDOTE': {
