@@ -13,12 +13,26 @@
     {
       "id": "8570",
       "content": "Add a note",
-      "important": "false"
+      "important": true
     },
     {
       "id": "f859",
       "content": "Add a note",
-      "important": "false"
+      "important": true
+    },
+    {
+      "id": "2604",
+      "important": false
+    },
+    {
+      "id": "9491",
+      "content": "Add a note",
+      "important": false
+    },
+    {
+      "id": "d971",
+      "content": "Test adding",
+      "important": false
     }
   ]
 }
