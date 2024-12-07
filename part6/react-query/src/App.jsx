@@ -7,8 +7,8 @@ const App = () => {
   const NewNoteMutation =  useMutation({ 
     mutationFn: createNote,
     onSuccess: (newNote) => {
-     const notes = queryClient.getQueryData(['notes'])
-     queryClient.setQueryData(['notes'], notes.concat(newNote))
+     const notes = queryClient.getQueryData({queryKey: ['notes']})
+     queryClient.setQueryData({queryKey: ['notes']}, notes.concat(newNote))
     }
   })
   const addNote = async (event) => {
@@ -30,8 +30,10 @@ const App = () => {
 
   const result = useQuery({
     queryKey: ['notes'],
-    queryFn: getNotes
+    queryFn: getNotes,
+    refetchOnWindowFocus: false
   })
+  
   console.log(JSON.parse(JSON.stringify(result)))
 
   if (result.isLoading){
