@@ -1,26 +1,26 @@
+import { useState } from 'react'
+
 import {
   BrowserRouter as Router,
-  Routes, 
+  Routes,
   Route,
   Link,
   Navigate,
   useParams,
   useNavigate,
-} from 'react-router-dom'
-import { useState } from 'react'
+  useMatch
+} from "react-router-dom"
 
-const Home = () => {
-  return (
-    <div>
-      <h2>This is a note app</h2>
-      <p>Welcome to my app</p>
-    </div>
-  )
-}
 
-const Note = ({ notes }) => {
-  const id = useParams().id
-  const note = notes.find(n => n.id === Number(id))
+const Home = () => (
+  <div>
+    <h2>TKTL notes app</h2>
+    <p>This is a website</p>
+  </div>
+)
+
+const Note = ({ note }) => {
+
   return (
     <div>
       <h2>{note.content}</h2>
@@ -30,24 +30,21 @@ const Note = ({ notes }) => {
   )
 }
 
-const Notes = ({ notes }) => {
-  return (
-    <div>
-      <h2>Notes</h2>
-      <ul>
-        {notes.map(note => 
-          <li key={note.id}>
-            <Link to={`/notes/${note.id}`}>{note.content}</Link>
-          </li>
-        )}
-      </ul>
+const Notes = ({ notes }) => (
+  <div>
+    <h2>Notes</h2>
+    <ul>
+      {notes.map(note =>
+        <li key={note.id}>
+          <Link to={`/notes/${note.id}`}>{note.content}</Link>
+        </li>
+      )}
+    </ul>
   </div>
-  )
-}
+)
 
-const Users = () => {
-  return (
-    <div>
+const Users = () => (
+  <div>
     <h2>TKTL notes app</h2>
     <ul>
       <li>Matti Luukkainen</li>
@@ -55,15 +52,14 @@ const Users = () => {
       <li>Arto Hellas</li>
     </ul>
   </div>
-  )
-}
+)
 
 const Login = (props) => {
   const navigate = useNavigate()
 
   const onSubmit = (event) => {
     event.preventDefault()
-    props.onLogin('phuc')
+    props.onLogin('mluukkai')
     navigate('/')
   }
 
@@ -72,12 +68,12 @@ const Login = (props) => {
       <h2>login</h2>
       <form onSubmit={onSubmit}>
         <div>
-          username: <input type='username'/>
+          username: <input />
         </div>
         <div>
           password: <input type='password' />
         </div>
-        <button type='submit'>Log in</button>
+        <button type="submit">login</button>
       </form>
     </div>
   )
@@ -107,6 +103,13 @@ const App = () => {
 
   const [user, setUser] = useState(null)
 
+  const match = useMatch('/notes/:id')
+
+  const note = match
+    ? notes.find(note => note.id === Number(match.params.id))
+    : null
+
+
   const login = (user) => {
     setUser(user)
   }
@@ -117,31 +120,27 @@ const App = () => {
 
   return (
     <div>
-      <Router>
-        <div>
-          <Link style={padding} to="/">home</Link>
-          <Link style={padding} to="/notes">notes</Link>
-          <Link style={padding} to="/users">users</Link>
-          {user
-            ? <em>{user} log in</em>
-            : <Link style={padding} to='/login'>Log in</Link>
-          }
-        </div>
-
-        <Routes>
-          <Route path="/notes/:id" element={<Note notes={notes} />} />
-          <Route path="/notes" element={<Notes notes={notes} />} />
-          <Route path="/users" element={user ? <Users /> : <Navigate replace to="/login" />} />
-          <Route path="/login" element={<Login onLogin={login} />} />
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </Router>
+      <div>
+        <Link style={padding} to="/">home</Link>
+        <Link style={padding} to="/notes">notes</Link>
+        <Link style={padding} to="/users">users</Link>
+        {user
+          ? <em>{user} logged in</em>
+          : <Link style={padding} to="/login">login</Link>
+        }
+      </div>
+      <Routes>
+        <Route path="/notes/:id" element={<Note note={note} />} />
+        <Route path="/notes" element={<Notes notes={notes} />} />
+        <Route path="/users" element={user ? <Users /> : <Navigate replace to="/login" />} />
+        <Route path="/login" element={<Login onLogin={login} />} />
+        <Route path="/" element={<Home />} />
+      </Routes>
       <div>
         <br />
-        <em>Note app, Department of Computer Science 2023</em>
+        <em>Note app, Department of Computer Science 2024</em>
       </div>
     </div>
-    
   )
 }
 
