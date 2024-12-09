@@ -6,8 +6,8 @@ import {
   useNavigate,
   useMatch
 } from 'react-router'
-
 import { useState, useEffect } from 'react'
+import { useField } from './hooks/index'
 
 const Menu = () => {
   const padding = {
@@ -24,19 +24,24 @@ const Menu = () => {
   )
 }
 
-const AnecdoteList = ({ anecdotes }) => (
-  <div>
-    <h2>Anecdotes</h2>
-    <ul>
-      {anecdotes.map(anecdote => 
+const AnecdoteList = ({ anecdotes }) => {
+  if (!anecdotes){
+    return <div>No anecdotes available</div>
+  }
+  console.log(anecdotes)
+  return (
+    <div>
+      <h2>Anecdotes</h2>
+      {anecdotes.map(anecdote => (
         <li key={anecdote.id}>
-          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
-        </li>)}
-    </ul>
-  </div>
-)
+        <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+      </li>
+      ))}
+    </div>
+  )
+}
 
-const Anecdote = ({anecdote}) => {
+const Anecdote = ({ anecdote }) => {
   return (
     <div>
       <h2>{anecdote.content}</h2>
@@ -72,18 +77,18 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const content = useField('text')
+  const author = useField('text')
+  const info = useField('text')
 
   const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
     navigate("/anecdotes")
@@ -94,22 +99,21 @@ const CreateNew = (props) => {
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          content:
+          <input {...content} />
         </div>
         <div>
-          author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          author:
+          <input {...author} />
         </div>
         <div>
-          url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          url for more info:
+          <input {...info} />
         </div>
         <button>create</button>
       </form>
     </div>
   )
-
 }
 
 const App = () => {
