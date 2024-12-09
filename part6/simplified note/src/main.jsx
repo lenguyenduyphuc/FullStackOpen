@@ -8,9 +8,3 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <App />
   </Provider>
 )
-
-// ReactDOM.createRoot(document.getElementById('root')).render(
-//     <Provider store={store}>
-//       <div />
-//     </Provider>
-//   )
