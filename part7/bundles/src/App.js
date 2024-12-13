@@ -1,32 +1,42 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import React from 'react'
 
-export const useNotes = (url) => {
-  const [notes, setNotes] = useState([])
-  useEffect(() => {
-    axios.get(url).then(response => {
-      setNotes(response.data)
-    })
-  }, [url])
-  return notes
-}
+class App extends React.Component {
+  constructor(props){
+    super(props)
 
-const App = () => {
-  const [counter, setCounter] = useState(0)
-  const [values, setValues] = useState([])
-  const notes = useNotes(BACKEND_URL)
-
-  const handleClick = () => {
-    setCounter(counter + 1)
-    setValues(values.concat(counter))
+    this.state = {
+      anecodes: [],
+      current: 0
+    }
   }
-  return (
-    <div className="container">
-      hello webpack {counter} clicks
-      <button onClick={handleClick}>press</button>
-      <div>{notes.length} notes on server {BACKEND_URL}</div>
-    </div>
-  )
+
+  componentDidMount = () => {
+    axios.get('http://localhost:3001/anecdotes').then(response => 
+      this.setState({ anecodes: response.data})
+    )
+  }
+  
+  handleClick = () => {
+    const current = Math.floor(
+      Math.random() * this.state.anecdotes.length
+    )
+    this.setState({ current })
+  }
+
+  render() {
+    if (this.state.anecodes.length === 0){
+      return <div>no anecodotes...</div>
+    }
+    return (
+      <div>
+        <h1>Anecdote of the day</h1>
+        <div>
+          {this.state.anecodes[this.state.current].content}
+        </div>
+        <button onClick={this.handleClick}>next</button>
+      </div>
+    )
+  }
 }
 
 export default App
