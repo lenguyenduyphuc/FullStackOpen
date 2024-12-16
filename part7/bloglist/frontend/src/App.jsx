@@ -11,15 +11,16 @@ import './App.css'
 
 import { initializeBlogs, createBlog, updateBlog, removeBlog} from './reducers/blogsReducer'
 import { createNotification } from './reducers/notificationsReducer'
+import { loginUser } from './reducers/userReducer'
 
 const App = () => {
   const dispatch = useDispatch()
 
   const blogs = useSelector(state => state.blogs)
   const errorMessage = useSelector(state => state.notification)
+  const user = useSelector(state => state.user)
   
-  const [user, setUser] = useState(null)
-
+  console.log(user)
   useEffect(() => {
     dispatch(initializeBlogs())
   }, [dispatch])
@@ -29,7 +30,7 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON){
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(loginUser(user))
       blogService.setToken(user.token)
     }
   }, [])
@@ -74,14 +75,12 @@ const App = () => {
   }
 
   const handleLogin = async (credentials) => {
-
     try {
-      const user = await loginService.login(credentials)
+      const user = await dispatch(loginUser(credentials))
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
       blogService.setToken(user.token)
-      setUser(user)
     } catch (exception) {
       dispatch(createNotification('Error: Wrong username or password'))
     }
@@ -89,8 +88,8 @@ const App = () => {
 
   const handleLogout = async (event) => {
     event.preventDefault()
+    dispatch(loginUser(null))
     window.localStorage.removeItem('loggedBlogappUser')
-    setUser(null)
   }
 
 
