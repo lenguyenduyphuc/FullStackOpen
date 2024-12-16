@@ -1,18 +1,16 @@
 import { useState } from 'react'
+import { useField } from '../hooks/hooks'
 
 const LoginForm = ({ createLogin }) => {
-	const [newUsername, setNewUsername] = useState('')
-	const [newPassword, setNewPassword] = useState('')
+	const newUsername = useField('text')
+	const newPassword = useField('password')
 	
 	const handleLogin = (event) => {
 		event.preventDefault()
 		createLogin({
-			username: newUsername,
-			password: newPassword
+			username: newUsername.value,
+			password: newPassword.value
 		})
-
-		setNewUsername('')
-		setNewPassword('')
 	}
 
 	return (
@@ -24,10 +22,9 @@ const LoginForm = ({ createLogin }) => {
 						<input
 							data-testid='username'
 							type='text'
-							value={newUsername}
 							name='Username'
 							placeholder='Username: '
-							onChange={(event) => setNewUsername(event.target.value)}
+							{...newUsername}
 						/>
 				</div>
 				<div>
@@ -37,7 +34,8 @@ const LoginForm = ({ createLogin }) => {
 							type='password'
 							value={newPassword}
 							name='Password: '
-							onChange={(event) => setNewPassword(event.target.value)}
+							placeholder='Password: '
+							{...newPassword}
 						/>
 				</div>
 				<button type='submit'>Log in</button>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
@@ -6,7 +6,6 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import './App.css'
 
 import { initializeBlogs, createBlog, updateBlog, removeBlog} from './reducers/blogsReducer'
@@ -20,7 +19,6 @@ const App = () => {
   const errorMessage = useSelector(state => state.notification)
   const user = useSelector(state => state.user)
   
-  console.log(user)
   useEffect(() => {
     dispatch(initializeBlogs())
   }, [dispatch])
@@ -28,10 +26,12 @@ const App = () => {
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if (loggedUserJSON){
+    if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      dispatch(loginUser(user))
-      blogService.setToken(user.token)
+      const loggedUser = dispatch(loginUser(user))
+      if (loggedUser) {
+        blogService.setToken(loggedUser.token)
+      }
     }
   }, [])
 
@@ -75,18 +75,20 @@ const App = () => {
   }
 
   const handleLogin = async (credentials) => {
-    try {
-      const user = await dispatch(loginUser(credentials))
+  try {
+    const user = await dispatch(loginUser(credentials))
+    if (user) { 
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
-      blogService.setToken(user.token)
-    } catch (exception) {
-      dispatch(createNotification('Error: Wrong username or password'))
+      blogService.setToken(user.token) 
     }
+  } catch (exception) {
+    dispatch(createNotification('Error: Wrong username or password'))
   }
+}
 
-  const handleLogout = async (event) => {
+  const handleLogout = (event) => {
     event.preventDefault()
     dispatch(loginUser(null))
     window.localStorage.removeItem('loggedBlogappUser')
