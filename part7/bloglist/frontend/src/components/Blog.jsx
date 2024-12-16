@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-const Blog = ({blog, updatedBlog, removedBlog, currentUser}) => {
+const Blog = ({updatedBlog, removedBlog, currentUser}) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -8,6 +9,11 @@ const Blog = ({blog, updatedBlog, removedBlog, currentUser}) => {
     borderWidth: 1,
     marginBottom: 5
   }
+
+  const dispatch = useDispatch()
+  const blog = useSelector(state => state)
+
+  console.log(blog)
 
   const updateBlog = (event) => {
     event.preventDefault()

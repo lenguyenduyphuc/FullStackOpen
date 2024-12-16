@@ -8,17 +8,22 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
 
+import { initializeBlogs } from './reducers/blogsReducer'
+import { useDispatch } from 'react-redux'
+
 const App = () => {
+  const dispatch = useDispatch()
+
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
-
-
+  
+  blogs = useSelector(state => state.blogs)
   useEffect(() => {
-    blogService.getAll().then(blogs => {
-      setBlogs(blogs)
-    })
-  }, [])
+    dispatch(initializeBlogs())
+  }, [dispatch])
+
+  console.log(blogs)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -140,7 +145,7 @@ const App = () => {
           {logoutForm()}
           {createBlogForm()}
           {blogs.sort((a,b) => b.likes - a.likes).map(blog => 
-            <Blog key={blog.id} blog={blog} updatedBlog={updateBlog} removedBlog={removeBlog} currentUser={user}/>
+            <Blog key={blog.id} updatedBlog={updateBlog} removedBlog={removeBlog} currentUser={user}/>
           )}
         </div>
       }

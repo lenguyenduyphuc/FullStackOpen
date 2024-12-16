@@ -11,14 +11,15 @@ const setToken = newToken => {
     }
 }
 
-const getAll = () => {
-    const request = axios.get(baseUrl)
-    return request.then(response => response.data)
+const getAll = async () => {
+    const response = await axios.get(baseUrl)
+    return response.data
 }
 
 const create = async newObject => {
-
-    const response = await axios.post(baseUrl, newObject, config)
+    const object = { newObject }
+    const response = await axios.post(baseUrl, object, config)
+    console.log(response.data)
     return response.data
 }
 
