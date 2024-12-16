@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux"
-import {createBlog} from "../reducers/blogsReducer"
+import {createBlog} from "../reducers/blogReducer"
 import { useField } from "../hooks/hooks"
 
 const BlogForm = () => {

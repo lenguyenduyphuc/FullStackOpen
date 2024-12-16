@@ -1,11 +1,12 @@
-import { useState, useImperativeHandle, forwardRef} from 'react'
+import {useImperativeHandle, forwardRef} from 'react'
 import PropTypes from 'prop-types'
+import { useTogglable } from '../hooks/hooks'
 
 const Togglable = forwardRef((props, ref) => {
-  const [visible, setVisible] = useState(false)
+   const togglable = useTogglable()
 
-  const hideWhenVisible = { display: visible ? 'none' : ''}
-  const showWhenVisible = { display: visible ? '' : 'none'}
+  const hideWhenVisible = { display: togglable.value ? 'none' : '' }
+  const showWhenVisible = { display: togglable.value ? '' : 'none' }
 
   const toggleVisibility = () => {
     setVisible(!visible)

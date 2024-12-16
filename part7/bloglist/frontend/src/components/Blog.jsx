@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useTogglable } from '../hooks/hooks'
 
 const Blog = ({blog, updatedBlog, removedBlog, currentUser}) => {
   const blogStyle = {
@@ -9,10 +9,10 @@ const Blog = ({blog, updatedBlog, removedBlog, currentUser}) => {
     marginBottom: 5
   }
 
-  const [visible, setVisible] = useState(true) 
+  const togglable = useTogglable()
 
-  const hideWhenVisible = { display: visible ? 'none' : ''}
-  const showWhenVisible = { display: visible ? '' : 'none'}
+  const hideWhenVisible = { display: togglable.value ? 'none' : '' }
+  const showWhenVisible = { display: togglable.value ? '' : 'none' }
 
   const updateBlog = (event) => {
     event.preventDefault()
@@ -31,12 +31,12 @@ const Blog = ({blog, updatedBlog, removedBlog, currentUser}) => {
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={() => setVisible(true)}>View</button>
+        <button onClick={togglable.toggle}>View</button>
       </div>
       <div style={showWhenVisible} className='blog'>
         <div data-testid='blogs' style={blogStyle}>
           {blog.title} {blog.author}
-          <button onClick={() => setVisible(false)}>Hide</button>
+          <button onClick={togglable.toggle}>Hide</button>
           <br/>
           <a href={blog.url} target="_blank" rel="noopener noreferrer">
             {blog.url}

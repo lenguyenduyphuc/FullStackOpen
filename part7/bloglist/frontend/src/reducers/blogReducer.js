@@ -6,18 +6,6 @@ const blogSlice = createSlice({
   name: 'blogs',
   initialState: [],
   reducers: {
-    toggleVisibilityOf(state, action) {
-      const id = action.payload
-      const blogToChange = state.find(n => n.id === id)
-      const changedBlog = {
-        ...blogToChange,
-        visibility: !blogToChange.visibility
-      }
-
-      return state.map(blog =>
-        blog.id !== id ? blog : changedBlog
-      )
-    },
     appendBlog(state, action) {
       state.push(action.payload)
     },

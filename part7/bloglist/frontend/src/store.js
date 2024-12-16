@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import blogReducer from './reducers/blogsReducer'
+import blogReducer from './reducers/blogReducer'
 import notificationReducer from './reducers/notificationsReducer'
 import userReducer from './reducers/userReducer'
 

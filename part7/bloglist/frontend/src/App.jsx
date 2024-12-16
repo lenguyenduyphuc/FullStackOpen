@@ -8,7 +8,7 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import './App.css'
 
-import { initializeBlogs, createBlog, updateBlog, removeBlog} from './reducers/blogsReducer'
+import { initializeBlogs, createBlog, updateBlog, removeBlog} from './reducers/blogReducer'
 import { createNotification } from './reducers/notificationsReducer'
 import { loginUser } from './reducers/userReducer'
 
@@ -81,6 +81,7 @@ const App = () => {
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
+      dispatch(createNotification(`${user.username} logged in`))
       blogService.setToken(user.token) 
     }
   } catch (exception) {

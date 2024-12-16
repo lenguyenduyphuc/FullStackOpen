@@ -13,3 +13,18 @@ export const useField = (type) => {
     onChange
   }
 }
+
+export const useTogglable = () => {
+  const [visible, setVisible] = useState(true)
+
+  const toggle = () => {
+    setVisible(!visible)
+  }
+
+  const value = visible ? 'none' : ''
+
+  return {
+    toggle,
+    value
+  }
+}
