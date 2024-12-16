@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux"
-import { createBlog } from "../reducers/blogsReducer"
+import {createBlog} from "../reducers/blogsReducer"
 import { useState } from "react"
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = () => {
 	const dispatch = useDispatch()
 
 	const [newTitle, setNewTitle] = useState('')

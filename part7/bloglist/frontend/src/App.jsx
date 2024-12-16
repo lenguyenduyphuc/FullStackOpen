@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -8,22 +9,19 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
 
-import { initializeBlogs } from './reducers/blogsReducer'
-import { useDispatch } from 'react-redux'
+import { initializeBlogs, createBlog, updateBlog, removeBlog} from './reducers/blogsReducer'
 
 const App = () => {
   const dispatch = useDispatch()
+  const blogs = useSelector(state => state.blogs)
 
-  const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
-  
-  blogs = useSelector(state => state.blogs)
+
   useEffect(() => {
     dispatch(initializeBlogs())
   }, [dispatch])
 
-  console.log(blogs)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -34,53 +32,33 @@ const App = () => {
     }
   }, [])
 
-  const createBlog = (blogObject) => {
-    blogService
-      .create(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-        setErrorMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-      })
+  const handleCreateBlog = (blogObject) => {
+    const newBlog = dispatch(createBlog(blogObject))
+    setErrorMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
+    setTimeout(() => setErrorMessage(null), 5000)
   }
 
-  const updateBlog = (objectToUpdate) => {
-    blogService
-      .update(objectToUpdate)
-      .then(returnedBlog => {
-        setBlogs(blogs.map(blog => blog.id === returnedBlog.id ? returnedBlog : blog))
-        setErrorMessage(`blog ${returnedBlog.title} has been liked `)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-      })
-      .catch(error => {
-        setErrorMessage(`Error updating blog: ${error.message}`)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-      })
+  const handleUpdateBlog = (blogToUpdate) => {
+    try {
+      dispatch(updateBlog(blogToUpdate))
+      setErrorMessage(`blog ${blogToUpdate.title} has been liked`)
+      setTimeout(() => setErrorMessage(null), 5000)
+    } catch (error) {
+      setErrorMessage(`Error updating blog: ${error.message}`)
+      setTimeout(() => setErrorMessage(null), 5000)
+    }
   }
 
-  const removeBlog = (objectToDelete) => {
-    if (window.confirm(`Remove blog ${objectToDelete.title} by ${objectToDelete.author}`)){
-      blogService
-      .remove(objectToDelete.id)
-      .then(()=> {
-        setBlogs(blogs.filter(blog => blog.id !== objectToDelete.id))
-        setErrorMessage(`blog ${objectToDelete.title} has been deleted`)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-      })
-      .catch(error => {
-        setErrorMessage(`Error deleting blog: You are not the creator`)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-      })
+  const handleRemoveBlog = (blogToRemove) => {
+    if (window.confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`)) {
+      try {
+        dispatch(removeBlog(blogToRemove.id))
+        setErrorMessage(`blog ${blogToRemove.title} has been deleted`)
+        setTimeout(() => setErrorMessage(null), 5000)
+      } catch (error) {
+        setErrorMessage(`Error deleting blog: ${error.message}`)
+        setTimeout(() => setErrorMessage(null), 5000)
+      }
     }
   }
 
@@ -88,7 +66,7 @@ const App = () => {
     return (
       <Togglable buttonLabel='new blog'>
         <div>
-          <BlogForm createBlog={createBlog}/>
+          <BlogForm createBlog={handleCreateBlog}/>
         </div>
       </Togglable>
     )
@@ -144,8 +122,8 @@ const App = () => {
           <p>{user.name} log in </p>
           {logoutForm()}
           {createBlogForm()}
-          {blogs.sort((a,b) => b.likes - a.likes).map(blog => 
-            <Blog key={blog.id} updatedBlog={updateBlog} removedBlog={removeBlog} currentUser={user}/>
+          {[...blogs].sort((a,b) => b.likes - a.likes).map(blog => 
+            <Blog key={blog.id} blog={blog} updatedBlog={handleUpdateBlog} removedBlog={handleRemoveBlog} currentUser={user}/>
           )}
         </div>
       }

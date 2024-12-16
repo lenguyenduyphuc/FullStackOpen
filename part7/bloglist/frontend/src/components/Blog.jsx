@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-const Blog = ({updatedBlog, removedBlog, currentUser}) => {
+const Blog = ({blog, updatedBlog, removedBlog, currentUser}) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -10,10 +10,10 @@ const Blog = ({updatedBlog, removedBlog, currentUser}) => {
     marginBottom: 5
   }
 
-  const dispatch = useDispatch()
-  const blog = useSelector(state => state)
+  const [visible, setVisible] = useState(true) 
 
-  console.log(blog)
+  const hideWhenVisible = { display: visible ? 'none' : ''}
+  const showWhenVisible = { display: visible ? '' : 'none'}
 
   const updateBlog = (event) => {
     event.preventDefault()
@@ -25,16 +25,9 @@ const Blog = ({updatedBlog, removedBlog, currentUser}) => {
   }
 
   const removeBlog = () => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
-      removedBlog(blog)
-    }
+   removedBlog(blog)
   }
   const canDeleteBlog = currentUser && blog.user && currentUser.username === blog.user.username
-
-  const [visible, setVisible] = useState(true) 
-
-  const hideWhenVisible = { display: visible ? 'none' : ''}
-  const showWhenVisible = { display: visible ? '' : 'none'}
 
   return (
     <div>

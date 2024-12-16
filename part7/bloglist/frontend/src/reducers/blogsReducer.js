@@ -49,11 +49,11 @@ export const createBlog = content => {
   }
 }
 
-export const updateBlog = blogToUpdate => {
+export const updateBlog = content => {
   return async dispatch => {
-    const updatedBlog = await blogService.update(blogToUpdate)
-    dispatch(updatedBlog(updateBlog))
-    return updateBlog
+    const blogToUpdate = await blogService.update(content)
+    dispatch(updatedBlog(blogToUpdate))
+    return updatedBlog
   }
 }
 
