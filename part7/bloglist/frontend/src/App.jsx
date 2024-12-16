@@ -10,12 +10,14 @@ import loginService from './services/login'
 import './App.css'
 
 import { initializeBlogs, createBlog, updateBlog, removeBlog} from './reducers/blogsReducer'
+import { createNotification } from './reducers/notificationsReducer'
 
 const App = () => {
   const dispatch = useDispatch()
-  const blogs = useSelector(state => state.blogs)
 
-  const [errorMessage, setErrorMessage] = useState(null)
+  const blogs = useSelector(state => state.blogs)
+  const errorMessage = useSelector(state => state.notification)
+  
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -34,18 +36,17 @@ const App = () => {
 
   const handleCreateBlog = (blogObject) => {
     const newBlog = dispatch(createBlog(blogObject))
-    setErrorMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
-    setTimeout(() => setErrorMessage(null), 5000)
+    dispatch(createNotification(`a new blog ${newBlog.title} by ${newBlog.author} added`))
+    setTimeout(() => dispatch(createNotification(null)), 5000)
   }
 
   const handleUpdateBlog = (blogToUpdate) => {
     try {
       dispatch(updateBlog(blogToUpdate))
-      setErrorMessage(`blog ${blogToUpdate.title} has been liked`)
-      setTimeout(() => setErrorMessage(null), 5000)
+      dispatch(createNotification(`blog ${blogToUpdate.title} has been liked`))
     } catch (error) {
-      setErrorMessage(`Error updating blog: ${error.message}`)
-      setTimeout(() => setErrorMessage(null), 5000)
+      dispatch(createNotification(`Error updating blog: ${error.message}`))
+      setTimeout(() => dispatch(createNotification(null)), 5000)
     }
   }
 
@@ -53,11 +54,11 @@ const App = () => {
     if (window.confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`)) {
       try {
         dispatch(removeBlog(blogToRemove.id))
-        setErrorMessage(`blog ${blogToRemove.title} has been deleted`)
-        setTimeout(() => setErrorMessage(null), 5000)
+        dispatch(createNotification(`blog ${blogToRemove.title} has been deleted`))
+        setTimeout(() => dispatch(createNotification(null), 5000))
       } catch (error) {
-        setErrorMessage(`Error deleting blog: ${error.message}`)
-        setTimeout(() => setErrorMessage(null), 5000)
+        dispatch(createNotification(`Error deleting blog: ${error.message}`))
+        setTimeout(() => dispatch(createNotification(null)), 5000)
       }
     }
   }
@@ -82,10 +83,7 @@ const App = () => {
       blogService.setToken(user.token)
       setUser(user)
     } catch (exception) {
-      setErrorMessage('Error: Wrong username or password')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(createNotification('Error: Wrong username or password'))
     }
   }
 

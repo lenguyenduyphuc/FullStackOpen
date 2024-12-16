@@ -5,6 +5,8 @@ const Notification = ({ message }) => {
     return null
   }
 
+  console.log(message)
+
   if (message.includes('Error')) {
     return (
       <div className="error" style={{

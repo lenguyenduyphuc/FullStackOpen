@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
 const Blog = ({blog, updatedBlog, removedBlog, currentUser}) => {
   const blogStyle = {
