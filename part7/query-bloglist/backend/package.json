@@ -1,0 +1,38 @@
+{
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "@stylistic/eslint-plugin-js": "^2.10.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.15.0",
+    "globals": "^15.12.0",
+    "json-server": "^1.0.0-beta.3",
+    "prettier": "3.4.2",
+    "supertest": "^7.0.0"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-async-errors": "^3.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.10.0",
+    "mongoose": "^8.8.1",
+    "nodemon": "^3.1.7"
+  },
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production nodemon index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "test": "cross-env NODE_ENV=test node --test-concurrency=1",
+    "build:ui": "rm -rf dist && cd ../frontend && npm run build && cp -r dist ../backend",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
+    "lint": "eslint .",
+    "start:test": "NODE_ENV=test node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
