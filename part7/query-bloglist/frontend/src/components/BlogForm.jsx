@@ -11,8 +11,8 @@ const BlogForm = () => {
 	const newBlogMutation = useMutation({
     mutationFn: createBlogs,
 		onSuccess: (newBlog) => {
-			console.log(newBlog)
-			queryClient.invalidateQueries({ queryKey: ['blogs'] })
+			const blogs = queryClient.getQueryData(['blogs'])
+      queryClient.setQueryData(['blogs'], blogs.concat(newBlog))
 			notificationDispatch({ type: 'SET_NOTIFICATION', payload: `a new blog ${newBlog.title} by ${newBlog.author} added` })
 			setTimeout(() => notificationDispatch({ type: 'CLEAR_NOTIFICATION' }), 5000)
 		},

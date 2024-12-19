@@ -22,7 +22,10 @@ const Blog = ({ blog, currentUser }) => {
   const updateBlogMutation = useMutation({
     mutationFn: updateBlogs,
     onSuccess: (updatedBlog) => {
-      queryClient.invalidateQueries({ queryKey: ['blogs']})
+      // queryClient.invalidateQueries({ queryKey: ['blogs'] })
+      queryClient.setQueryData(['blogs'], (oldData) => {
+        return oldData.map(blog => blog.id === updatedBlog.id ? updatedBlog : blog)
+      })
       notificationDispatch({ type: 'SET_NOTIFICATION', payload: `Blog ${updatedBlog.title} has been liked` })
       setTimeout(() => notificationDispatch({ type: 'CLEAR_NOTIFICATION' }), 5000)
     },
@@ -39,11 +42,13 @@ const Blog = ({ blog, currentUser }) => {
 
   const deleteBlogMutation = useMutation({
     mutationFn: removeBlogs,
-    onSuccess: (removedBlog) => {
-      queryClient.invalidateQueries({ queryKey: ['blogs']})
-      notificationDispatch({ type: 'SET_NOTIFICATION', payload: 'Error The blog has already been removed'})
+    onSuccess: (_, removedBlogId) => {
+      queryClient.setQueryData(['blogs'], (oldData) => {
+        return oldData.filter(blog => blog.id !== removedBlogId)
+      })
+      notificationDispatch({ type: 'SET_NOTIFICATION', payload: 'The blog has already been removed'})
       setTimeout(() => notificationDispatch({ type: 'CLEAR_NOTIFICATION' }), 5000)
-    }
+    },
   })
 
   const removeBlog = (event) => {

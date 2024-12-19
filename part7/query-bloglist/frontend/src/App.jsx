@@ -1,5 +1,5 @@
 import { useEffect, useContext } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -16,7 +16,8 @@ const App = () => {
 
   const result = useQuery({ 
     queryKey: ['blogs'], 
-    queryFn: getBlogs
+    queryFn: getBlogs,
+    refetchOnWindowFocus: false
   })
 
   useEffect(() => {
