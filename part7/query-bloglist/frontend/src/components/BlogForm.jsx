@@ -1,11 +1,26 @@
 import { useField } from "../hooks/hooks"
+import { createBlogs } from '../services/blogs'
+import { useContext } from 'react'
+import { useMutation, useQueryClient} from '@tanstack/react-query' 
+import { NotificationContext } from "../reducers/Context"
 
 const BlogForm = () => {
+	const [notification, notificationDispatch] = useContext(NotificationContext)
+	const queryClient = useQueryClient()
+	
 	const newBlogMutation = useMutation({
-    mutationFn: blogService.create,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blogs']})
-    }
+    mutationFn: createBlogs,
+		onSuccess: (newBlog) => {
+			console.log(newBlog)
+			queryClient.invalidateQueries({ queryKey: ['blogs'] })
+			notificationDispatch({ type: 'SET_NOTIFICATION', payload: `a new blog ${newBlog.title} by ${newBlog.author} added` })
+			setTimeout(() => notificationDispatch({ type: 'CLEAR_NOTIFICATION' }), 5000)
+		},
+		onError: (error) => {
+			queryClient.invalidateQueries({ queryKey: ['blogs'] })
+			notificationDispatch({ type: 'SET_NOTIFICATION', payload: `Error create new blogs` })
+			setTimeout(() => notificationDispatch({ type: 'CLEAR_NOTIFICATION' }), 5000)
+		}
   })
 
 	const newTitle = useField('text')
@@ -20,7 +35,7 @@ const BlogForm = () => {
       author: newAuthor.value,
       url: newUrl.value
 		}
-		newBlogMutation({ blogObject })
+		newBlogMutation.mutate(blogObject)
 	}
 
 

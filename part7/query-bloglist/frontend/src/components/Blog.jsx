@@ -1,8 +1,16 @@
-import { useMutation } from '@tanstack/react-query' 
+import { useMutation, useQueryClient} from '@tanstack/react-query' 
 import { useTogglable } from '../hooks/hooks'
-import { update } from '../services/blogs'
+import { updateBlogs, removeBlogs } from '../services/blogs'
+import { useContext } from 'react'
+import { NotificationContext} from '../reducers/Context'
 
-const Blog = ({blog, updatedBlog, removedBlog, currentUser}) => {
+const Blog = ({ blog, currentUser }) => {
+  const [notification, notificationDispatch] = useContext(NotificationContext)
+  const togglable = useTogglable()
+  const queryClient = useQueryClient()
+
+  const hideWhenVisible = { display: togglable.value ? 'none' : '' }
+  const showWhenVisible = { display: togglable.value ? '' : 'none' }
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -11,25 +19,38 @@ const Blog = ({blog, updatedBlog, removedBlog, currentUser}) => {
     marginBottom: 5
   }
 
-  const togglable = useTogglable()
-
-  const hideWhenVisible = { display: togglable.value ? 'none' : '' }
-  const showWhenVisible = { display: togglable.value ? '' : 'none' }
-
   const updateBlogMutation = useMutation({
-    mutationFn: update,
-    onSucess: () => {
+    mutationFn: updateBlogs,
+    onSuccess: (updatedBlog) => {
       queryClient.invalidateQueries({ queryKey: ['blogs']})
+      notificationDispatch({ type: 'SET_NOTIFICATION', payload: `Blog ${updatedBlog.title} has been liked` })
+      setTimeout(() => notificationDispatch({ type: 'CLEAR_NOTIFICATION' }), 5000)
+    },
+    onError: (updatedBlog) => {
+      notificationDispatch({ type: 'SET_NOTIFICATION', payload: `Blog ${updatedBlog.title} has been liked` })
+      setTimeout(() => notificationDispatch({ type: 'CLEAR_NOTIFICATION' }), 5000)
     }
   })
 
   const updateBlog = (event) => {
     event.preventDefault()
-    updateBlogMutation.mutation({ ...blog, likes: blog.like + 1})
+    updateBlogMutation.mutate({ ...blog, likes: blog.likes + 1 })
   }
 
-  const removeBlog = () => {
-   removedBlog(blog)
+  const deleteBlogMutation = useMutation({
+    mutationFn: removeBlogs,
+    onSuccess: (removedBlog) => {
+      queryClient.invalidateQueries({ queryKey: ['blogs']})
+      notificationDispatch({ type: 'SET_NOTIFICATION', payload: 'Error The blog has already been removed'})
+      setTimeout(() => notificationDispatch({ type: 'CLEAR_NOTIFICATION' }), 5000)
+    }
+  })
+
+  const removeBlog = (event) => {
+    event.preventDefault()
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      deleteBlogMutation.mutate(blog.id)
+    }
   }
   
   const canDeleteBlog = currentUser && blog.user && currentUser.username === blog.user.username

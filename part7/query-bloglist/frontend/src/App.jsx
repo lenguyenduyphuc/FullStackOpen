@@ -1,21 +1,40 @@
-import { useEffect } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useContext } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
+import { getBlogs } from './services/blogs'
+import { NotificationContext, AuthContext }  from './reducers/Context'
 import './App.css'
 
 const App = () => {
-  const queryClient = useQueryClient()
-  
-  const result = useQuery({
-    queryKey: ['blogs'],
-    queryFn: getAll
+  const [user, userDispatch] = useContext(AuthContext)
+  const [notification, notificationDispatch] = useContext(NotificationContext)
+
+  const result = useQuery({ 
+    queryKey: ['blogs'], 
+    queryFn: getBlogs
   })
-  console.log(JSON.parse(JSON.stringify(result)))
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      userDispatch({ type: 'SET_USER', payload: user })
+      blogService.setToken(user.token)
+    }
+  }, [])
+
+  const handleLogout = () => {
+    userDispatch({ type: 'CLEAR_USER' })
+    window.localStorage.removeItem('loggedBlogappUser')
+    blogService.setToken(null)
+    notificationDispatch({ type: 'SET_NOTIFICATION', payload: 'Logged out successfully' })
+    setTimeout(() => notificationDispatch({ type: 'CLEAR_NOTIFICATION' }), 5000)
+  }
 
   if (result.isLoading) {
     return <div>loading data...</div>
@@ -23,116 +42,26 @@ const App = () => {
 
   const blogs = result.data
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      const loggedUser = dispatch(loginUser(user))
-      if (loggedUser) {
-        blogService.setToken(loggedUser.token)
-      }
-    }
-  }, [])
-
-  const newBlogMutation = useMutation({
-    mutationFn: blogService.create,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blogs']})
-    }
-  })
-
-  const handleCreateBlog = (blogObject) => {
-    const newBlog = dispatch(createBlog(blogObject))
-    dispatch(createNotification(`a new blog ${newBlog.title} by ${newBlog.author} added`))
-    setTimeout(() => dispatch(createNotification(null)), 5000)
-  }
-
-  const handleUpdateBlog = (blogToUpdate) => {
-    try {
-      dispatch(updateBlog(blogToUpdate))
-      dispatch(createNotification(`blog ${blogToUpdate.title} has been liked`))
-    } catch (error) {
-      dispatch(createNotification(`Error updating blog: ${error.message}`))
-      setTimeout(() => dispatch(createNotification(null)), 5000)
-    }
-  }
-
-  const handleRemoveBlog = (blogToRemove) => {
-    if (window.confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`)) {
-      try {
-        dispatch(removeBlog(blogToRemove.id))
-        dispatch(createNotification(`blog ${blogToRemove.title} has been deleted`))
-        setTimeout(() => dispatch(createNotification(null), 5000))
-      } catch (error) {
-        dispatch(createNotification(`Error deleting blog: ${error.message}`))
-        setTimeout(() => dispatch(createNotification(null)), 5000)
-      }
-    }
-  }
-
-  const createBlogForm = () => {
-    return (
-      <Togglable buttonLabel='new blog'>
-        <div>
-          <BlogForm createBlog={handleCreateBlog}/>
-        </div>
-      </Togglable>
-    )
-  }
-
-  const handleLogin = async (credentials) => {
-  try {
-    const user = await dispatch(loginUser(credentials))
-    if (user) { 
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
-      )
-      dispatch(createNotification(`${user.username} logged in`))
-      blogService.setToken(user.token) 
-    }
-  } catch (exception) {
-    dispatch(createNotification('Error: Wrong username or password'))
-  }
-}
-
-  const handleLogout = (event) => {
-    event.preventDefault()
-    dispatch(loginUser(null))
-    window.localStorage.removeItem('loggedBlogappUser')
-  }
-
-
-  const logoutForm = () => (
-    <form onSubmit={handleLogout}>
-      <button type='submit'>Log out</button>
-    </form>
-  )
-
-  const loginForm = () => {
-   return (
-    <Togglable buttonLabel='login'>
-      <div>
-        <LoginForm createLogin = {handleLogin}/>
-      </div>
-    </Togglable>
-   )
-  }
-
   return (
     <div>
       <h2>Blogs</h2>
-      <Notification message={errorMessage}/>
-      {user === null ?
-        loginForm() :
+      <Notification message={notification} />
+      {user === null ? (
+        <LoginForm/>
+      ) : (
         <div>
-          <p>{user.name} log in </p>
-          {logoutForm()}
-          {createBlogForm()}
-          {[...blogs].sort((a,b) => b.likes - a.likes).map(blog => 
-            <Blog key={blog.id} blog={blog} updatedBlog={handleUpdateBlog} removedBlog={handleRemoveBlog} currentUser={user}/>
-          )}
+          <p>{user.name} logged in</p>
+          <button onClick={handleLogout}>Log out</button>
+          <Togglable buttonLabel="Create new blog">
+            <BlogForm />
+          </Togglable>
+          {[...blogs]
+            .sort((a, b) => b.likes - a.likes)
+            .map(blog => 
+              <Blog key={blog.id} blog={blog} currentUser={user} />
+            )}
         </div>
-      }
+      )}
     </div>
   )
 }
