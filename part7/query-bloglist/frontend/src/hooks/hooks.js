@@ -15,7 +15,7 @@ export const useField = (type) => {
 };
 
 export const useTogglable = () => {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
 
   const toggle = () => {
     setVisible(!visible);

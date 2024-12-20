@@ -6,15 +6,20 @@ import {
   NotificationContextProvider,
   AuthContextProvider,
 } from "./reducers/Context";
+import {
+  BrowserRouter as Router
+} from 'react-router-dom'
 
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <QueryClientProvider client={queryClient}>
+  <Router>
+    <QueryClientProvider client={queryClient}>
     <AuthContextProvider>
       <NotificationContextProvider>
         <App />
       </NotificationContextProvider>
     </AuthContextProvider>
   </QueryClientProvider>
+  </Router>
 );

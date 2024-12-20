@@ -3,14 +3,17 @@ import { createBlogs } from "../services/blogs";
 import { useContext } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NotificationContext } from "../reducers/Context";
+import { useNavigate } from "react-router-dom";
 
 const BlogForm = () => {
   const [notification, notificationDispatch] = useContext(NotificationContext);
   const queryClient = useQueryClient();
-
+  const navigate = useNavigate()
+  
   const newBlogMutation = useMutation({
     mutationFn: createBlogs,
     onSuccess: (newBlog) => {
+      queryClient.invalidateQueries(["blogs"]);
       const blogs = queryClient.getQueryData(["blogs"]);
       queryClient.setQueryData(["blogs"], blogs.concat(newBlog));
       notificationDispatch({
@@ -21,6 +24,7 @@ const BlogForm = () => {
         () => notificationDispatch({ type: "CLEAR_NOTIFICATION" }),
         5000
       );
+      navigate('/users')
     },
     onError: (error) => {
       queryClient.invalidateQueries({ queryKey: ["blogs"] });

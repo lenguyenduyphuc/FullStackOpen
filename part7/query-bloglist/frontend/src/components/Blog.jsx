@@ -3,21 +3,13 @@ import { useTogglable } from "../hooks/hooks";
 import { updateBlogs, removeBlogs } from "../services/blogs";
 import { useContext } from "react";
 import { NotificationContext } from "../reducers/Context";
+import { useParams, useNavigate } from "react-router-dom";
 
-const Blog = ({ blog, currentUser }) => {
+const Blog = ({ blogs, currentUser }) => {
   const [notification, notificationDispatch] = useContext(NotificationContext);
   const togglable = useTogglable();
   const queryClient = useQueryClient();
-
-  const hideWhenVisible = { display: togglable.value ? "none" : "" };
-  const showWhenVisible = { display: togglable.value ? "" : "none" };
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  };
+  const navigate = useNavigate();
 
   const updateBlogMutation = useMutation({
     mutationFn: updateBlogs,
@@ -25,7 +17,9 @@ const Blog = ({ blog, currentUser }) => {
       // queryClient.invalidateQueries({ queryKey: ['blogs'] })
       queryClient.setQueryData(["blogs"], (oldData) => {
         return oldData.map((blog) =>
-          blog.id === updatedBlog.id ? updatedBlog : blog
+          blog.id === updatedBlog.id
+          ? {...updatedBlog, user: blog.user}  // Preserve the original user object
+          : blog
         );
       });
       notificationDispatch({
@@ -49,14 +43,10 @@ const Blog = ({ blog, currentUser }) => {
     },
   });
 
-  const updateBlog = (event) => {
-    event.preventDefault();
-    updateBlogMutation.mutate({ ...blog, likes: blog.likes + 1 });
-  };
-
   const deleteBlogMutation = useMutation({
     mutationFn: removeBlogs,
     onSuccess: (_, removedBlogId) => {
+      queryClient.invalidateQueries(["blogs"]); // Add this line
       queryClient.setQueryData(["blogs"], (oldData) => {
         return oldData.filter((blog) => blog.id !== removedBlogId);
       });
@@ -68,8 +58,37 @@ const Blog = ({ blog, currentUser }) => {
         () => notificationDispatch({ type: "CLEAR_NOTIFICATION" }),
         5000
       );
+      navigate('/users')
     },
   });
+
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: "solid",
+    borderWidth: 1,
+    marginBottom: 5,
+  };
+
+  const id = useParams().id;
+  const blog = blogs.find(b => String(b.id) === String(id));
+  if (!blog) {
+    return <div>Blog not found</div>;
+  }
+
+  const updateBlog = (event) => {
+    event.preventDefault();
+    updateBlogMutation.mutate({
+      ...blog,
+      likes: blog.likes + 1,
+      user: {
+        ...blog.user,  // Spread all user properties
+        username: blog.user.username,
+        name: blog.user.name,
+        id: blog.user.id
+      }
+    });
+  };
 
   const removeBlog = (event) => {
     event.preventDefault();
@@ -78,15 +97,11 @@ const Blog = ({ blog, currentUser }) => {
     }
   };
 
-  const canDeleteBlog =
-    currentUser && blog.user && currentUser.username === blog.user.username;
+  const canDeleteBlog = currentUser.username === blog.user.username;
 
   return (
     <div>
-      <div style={hideWhenVisible}>
-        <button onClick={togglable.toggle}>View</button>
-      </div>
-      <div style={showWhenVisible} className="blog">
+      <div className="blog">
         <div data-testid="blogs" style={blogStyle}>
           {blog.title} {blog.author}
           <button onClick={togglable.toggle}>Hide</button>
@@ -98,14 +113,14 @@ const Blog = ({ blog, currentUser }) => {
           {blog.likes}
           <button onClick={updateBlog}>Like</button>
           <br />
+          {blog.user.name}
           {canDeleteBlog ? (
             <>
-              {blog.user.name}
               <button onClick={removeBlog}>Delete</button>
               <br />
             </>
           ) : (
-            "Unknown user"
+            ""
           )}
         </div>
       </div>

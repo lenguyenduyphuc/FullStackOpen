@@ -4,10 +4,11 @@ import { useField } from "../hooks/hooks";
 import { login } from "../services/login";
 import { NotificationContext, AuthContext } from "../reducers/Context";
 import blogService from "../services/blogs";
-
+import { useNavigate } from "react-router-dom";
 const LoginForm = () => {
   const newUsername = useField("text");
   const newPassword = useField("password");
+	const navigate = useNavigate()
 
   const [, userDispatch] = useContext(AuthContext);
   const [, notificationDispatch] = useContext(NotificationContext);
@@ -26,6 +27,7 @@ const LoginForm = () => {
         () => notificationDispatch({ type: "CLEAR_NOTIFICATION" }),
         5000
       );
+      navigate("/users")
     },
     onError: (error) => {
       notificationDispatch({
@@ -47,6 +49,7 @@ const LoginForm = () => {
     };
     newUserMutation.mutate(credentials);
   };
+
 
   return (
     <div>
