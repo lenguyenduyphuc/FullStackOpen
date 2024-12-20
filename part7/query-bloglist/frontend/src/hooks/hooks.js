@@ -1,30 +1,30 @@
-import { useState } from "react"
+import { useState } from "react";
 
 export const useField = (type) => {
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState("");
 
   const onChange = (event) => {
-    setValue(event.target.value)
-  }
+    setValue(event.target.value);
+  };
 
   return {
     type,
     value,
-    onChange
-  }
-}
+    onChange,
+  };
+};
 
 export const useTogglable = () => {
-  const [visible, setVisible] = useState(true)
+  const [visible, setVisible] = useState(true);
 
   const toggle = () => {
-    setVisible(!visible)
-  }
+    setVisible(!visible);
+  };
 
-  const value = visible ? 'none' : ''
+  const value = visible ? "none" : "";
 
   return {
     toggle,
-    value
-  }
-}
+    value,
+  };
+};
