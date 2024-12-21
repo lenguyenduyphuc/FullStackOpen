@@ -36,6 +36,11 @@ export const removeBlogs = async (id) => {
   return response.data;
 };
 
+export const updatedComment = async ({id, comment}) => {
+  const response = await axios.post(`${baseUrl}/${id}/comments`, {comment}, config)
+  return response.data
+}
+
 export default {
   setToken,
 };

@@ -1,9 +1,17 @@
+'use client'
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTogglable } from "../hooks/hooks";
 import { updateBlogs, removeBlogs } from "../services/blogs";
 import { useContext } from "react";
 import { NotificationContext } from "../reducers/Context";
 import { useParams, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Badge } from "@/components/ui/badge";
+import { ThumbsUp, Trash2 } from 'lucide-react';
+import Comment from "./Comment";
 
 const Blog = ({ blogs, currentUser }) => {
   const [notification, notificationDispatch] = useContext(NotificationContext);
@@ -14,12 +22,11 @@ const Blog = ({ blogs, currentUser }) => {
   const updateBlogMutation = useMutation({
     mutationFn: updateBlogs,
     onSuccess: (updatedBlog) => {
-      // queryClient.invalidateQueries({ queryKey: ['blogs'] })
       queryClient.setQueryData(["blogs"], (oldData) => {
         return oldData.map((blog) =>
           blog.id === updatedBlog.id
-          ? {...updatedBlog, user: blog.user}  // Preserve the original user object
-          : blog
+            ? { ...updatedBlog, user: blog.user }
+            : blog
         );
       });
       notificationDispatch({
@@ -34,7 +41,7 @@ const Blog = ({ blogs, currentUser }) => {
     onError: (updatedBlog) => {
       notificationDispatch({
         type: "SET_NOTIFICATION",
-        payload: `Blog ${updatedBlog.title} has been liked`,
+        payload: `Error liking blog ${updatedBlog.title}`,
       });
       setTimeout(
         () => notificationDispatch({ type: "CLEAR_NOTIFICATION" }),
@@ -46,32 +53,24 @@ const Blog = ({ blogs, currentUser }) => {
   const deleteBlogMutation = useMutation({
     mutationFn: removeBlogs,
     onSuccess: (_, removedBlogId) => {
-      queryClient.invalidateQueries(["blogs"]); // Add this line
+      queryClient.invalidateQueries(["blogs"]);
       queryClient.setQueryData(["blogs"], (oldData) => {
         return oldData.filter((blog) => blog.id !== removedBlogId);
       });
       notificationDispatch({
         type: "SET_NOTIFICATION",
-        payload: "The blog has already been removed",
+        payload: "The blog has been removed",
       });
       setTimeout(
         () => notificationDispatch({ type: "CLEAR_NOTIFICATION" }),
         5000
       );
-      navigate('/users')
+      navigate("/users");
     },
   });
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  };
-
   const id = useParams().id;
-  const blog = blogs.find(b => String(b.id) === String(id));
+  const blog = blogs.find((b) => String(b.id) === String(id));
   if (!blog) {
     return <div>Blog not found</div>;
   }
@@ -81,12 +80,7 @@ const Blog = ({ blogs, currentUser }) => {
     updateBlogMutation.mutate({
       ...blog,
       likes: blog.likes + 1,
-      user: {
-        ...blog.user,  // Spread all user properties
-        username: blog.user.username,
-        name: blog.user.name,
-        id: blog.user.id
-      }
+      user: blog.user,
     });
   };
 
@@ -100,32 +94,47 @@ const Blog = ({ blogs, currentUser }) => {
   const canDeleteBlog = currentUser.username === blog.user.username;
 
   return (
-    <div>
-      <div className="blog">
-        <div data-testid="blogs" style={blogStyle}>
-          {blog.title} {blog.author}
-          <button onClick={togglable.toggle}>Hide</button>
-          <br />
-          <a href={blog.url} target="_blank" rel="noopener noreferrer">
-            {blog.url}
-          </a>{" "}
-          <br />
-          {blog.likes}
-          <button onClick={updateBlog}>Like</button>
-          <br />
-          {blog.user.name}
-          {canDeleteBlog ? (
-            <>
-              <button onClick={removeBlog}>Delete</button>
-              <br />
-            </>
-          ) : (
-            ""
-          )}
-        </div>
-      </div>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{blog.title}</CardTitle>
+        <CardDescription>by {blog.author}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Collapsible>
+          <CollapsibleTrigger asChild>
+            <Button variant="outline" className="w-full justify-between">
+              {togglable.visible ? 'Hide Details' : 'Show Details'}
+              <Badge variant="secondary">{blog.likes} likes</Badge>
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-4 mt-4">
+            <p>
+              <a href={blog.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                {blog.url}
+              </a>
+            </p>
+            <div className="flex items-center justify-between">
+              <Button onClick={updateBlog} size="sm">
+                <ThumbsUp className="mr-2 h-4 w-4" /> Like
+              </Button>
+              <p>Added by: {blog.user.name}</p>
+            </div>
+            {canDeleteBlog && (
+              <Button onClick={removeBlog} variant="destructive" size="sm">
+                <Trash2 className="mr-2 h-4 w-4" /> Delete
+              </Button>
+            )}
+          </CollapsibleContent>
+        </Collapsible>
+        <Comment blog={blog} />
+        <ul className="list-disc list-inside mt-4">
+          {blog.comments &&
+            blog.comments.map((comment, index) => <li key={index}>{comment}</li>)}
+        </ul>
+      </CardContent>
+    </Card>
   );
 };
 
 export default Blog;
+

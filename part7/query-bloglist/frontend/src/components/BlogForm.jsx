@@ -1,47 +1,48 @@
+'use client'
+
 import { useField } from "../hooks/hooks";
 import { createBlogs } from "../services/blogs";
 import { useContext } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NotificationContext } from "../reducers/Context";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 
 const BlogForm = () => {
   const [notification, notificationDispatch] = useContext(NotificationContext);
   const queryClient = useQueryClient();
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
+  const toast = useToast()
+
   const newBlogMutation = useMutation({
     mutationFn: createBlogs,
     onSuccess: (newBlog) => {
       queryClient.invalidateQueries(["blogs"]);
-      const blogs = queryClient.getQueryData(["blogs"]);
-      queryClient.setQueryData(["blogs"], blogs.concat(newBlog));
-      notificationDispatch({
-        type: "SET_NOTIFICATION",
-        payload: `a new blog ${newBlog.title} by ${newBlog.author} added`,
+      toast({
+        title: "Blog created",
+        description: `A new blog "${newBlog.title}" by ${newBlog.author} has been added.`,
       });
-      setTimeout(
-        () => notificationDispatch({ type: "CLEAR_NOTIFICATION" }),
-        5000
-      );
-      navigate('/users')
+      navigate("/users");
     },
     onError: (error) => {
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
-      notificationDispatch({
-        type: "SET_NOTIFICATION",
-        payload: `Error create new blogs`,
+      toast({
+        title: "Error",
+        description: "Failed to create new blog. Please try again.",
+        variant: "destructive",
       });
-      setTimeout(
-        () => notificationDispatch({ type: "CLEAR_NOTIFICATION" }),
-        5000
-      );
     },
   });
 
   const newTitle = useField("text");
   const newAuthor = useField("text");
   const newUrl = useField("text");
+  const newContent = useField("textarea");
 
   const addBlog = async (event) => {
     event.preventDefault();
@@ -50,48 +51,60 @@ const BlogForm = () => {
       title: newTitle.value,
       author: newAuthor.value,
       url: newUrl.value,
+      content: newContent.value,
     };
     newBlogMutation.mutate(blogObject);
   };
 
   return (
-    <div>
-      <h2>Create new blog</h2>
-      <form onSubmit={addBlog}>
-        <div>
-          title
-          <input
-            data-testid="title"
-            id="title"
-            name="Title: "
-            placeholder="Title"
-            {...newTitle}
-          />
-        </div>
-        <div>
-          author
-          <input
-            data-testid="author"
-            id="author"
-            name="Author: "
-            placeholder="Author"
-            {...newAuthor}
-          />
-        </div>
-        <div>
-          url
-          <input
-            data-testid="url"
-            id="url"
-            name="URL: "
-            placeholder="URL"
-            {...newUrl}
-          />
-        </div>
-        <button type="submit">Create</button>
-      </form>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Create new blog</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={addBlog} className="space-y-4">
+          <div>
+            <Label htmlFor="title">Title</Label>
+            <Input
+              id="title"
+              data-testid="title"
+              placeholder="Enter blog title"
+              {...newTitle}
+            />
+          </div>
+          <div>
+            <Label htmlFor="author">Author</Label>
+            <Input
+              id="author"
+              data-testid="author"
+              placeholder="Enter author name"
+              {...newAuthor}
+            />
+          </div>
+          <div>
+            <Label htmlFor="url">URL</Label>
+            <Input
+              id="url"
+              data-testid="url"
+              placeholder="Enter blog URL"
+              {...newUrl}
+            />
+          </div>
+          <div>
+            <Label htmlFor="content">Content</Label>
+            <Textarea
+              id="content"
+              data-testid="content"
+              placeholder="Write your blog content here"
+              {...newContent}
+            />
+          </div>
+          <Button type="submit">Create Blog</Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 };
 
 export default BlogForm;
+

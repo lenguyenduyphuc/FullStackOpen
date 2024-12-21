@@ -7,13 +7,11 @@ const jwt = require('jsonwebtoken')
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
     .find({}).populate('user', { username: 1, name: 1 })
-
   response.json(blogs)
 })
 
 blogsRouter.get('/:id', async (request, response) => {
   const blog = await Blog.findById(request.params.id)
-
   if (blog){
     response.json(blog)
   } else {
@@ -23,16 +21,7 @@ blogsRouter.get('/:id', async (request, response) => {
 
 blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   const blog = new Blog(request.body)
-
   const user = request.user
-
-  if (!user ) {
-    return response.status(403).json({ error: 'user missing' })
-  }  
-
-  if (!blog.title || !blog.url ) {
-    return response.status(400).json({ error: 'title or url missing' })
-  }   
 
   blog.likes = blog.likes || 0
   blog.user = user
@@ -41,7 +30,6 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   await user.save()
 
   const savedBlog = await blog.save()
-
   response.status(201).json(savedBlog)
 })
 
@@ -58,11 +46,8 @@ blogsRouter.delete('/:id', middleware.userExtractor, async (request, response, n
   }
 
   await blog.deleteOne()
-
   user.blogs = user.blogs.filter(b => b._id.toString() !== blog._id.toString())
-
   await user.save()
-
   response.status(204).end()
 })
 
@@ -79,5 +64,21 @@ blogsRouter.put('/:id', async (request, response) => {
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
   response.json(updatedBlog)
 })
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const { comment } = request.body
+    
+  const blog = await Blog.findById(request.params.id)
+
+  if (!blog.comments) {
+    blog.comments = []
+  }
+
+  blog.comments = blog.comments.concat(comment)
+  const updatedBlog = await blog.save()
+    
+  response.status(201).json(updatedBlog)
+})
+
 
 module.exports = blogsRouter

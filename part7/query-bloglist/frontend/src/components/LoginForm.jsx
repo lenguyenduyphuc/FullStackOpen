@@ -1,3 +1,5 @@
+'use client'
+
 import { useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useField } from "../hooks/hooks";
@@ -5,10 +7,15 @@ import { login } from "../services/login";
 import { NotificationContext, AuthContext } from "../reducers/Context";
 import blogService from "../services/blogs";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 const LoginForm = () => {
   const newUsername = useField("text");
   const newPassword = useField("password");
-	const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [, userDispatch] = useContext(AuthContext);
   const [, notificationDispatch] = useContext(NotificationContext);
@@ -27,12 +34,12 @@ const LoginForm = () => {
         () => notificationDispatch({ type: "CLEAR_NOTIFICATION" }),
         5000
       );
-      navigate("/users")
+      navigate("/users");
     },
     onError: (error) => {
       notificationDispatch({
         type: "SET_NOTIFICATION",
-        payload: "Error wrong username or password",
+        payload: "Error: wrong username or password",
       });
       setTimeout(
         () => notificationDispatch({ type: "CLEAR_NOTIFICATION" }),
@@ -50,35 +57,39 @@ const LoginForm = () => {
     newUserMutation.mutate(credentials);
   };
 
-
   return (
-    <div>
-      <h2>Login Form</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-            data-testid="username"
-            type="text"
-            name="Username"
-            placeholder="Username: "
-            {...newUsername}
-          />
-        </div>
-        <div>
-          password
-          <input
-            data-testid="password"
-            type="password"
-            name="Password"
-            placeholder="Password: "
-            {...newPassword}
-          />
-        </div>
-        <button type="submit">Log in</button>
-      </form>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Login Form</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              data-testid="username"
+              type="text"
+              placeholder="Username"
+              {...newUsername}
+            />
+          </div>
+          <div>
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              data-testid="password"
+              type="password"
+              placeholder="Password"
+              {...newPassword}
+            />
+          </div>
+          <Button type="submit">Log in</Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 };
 
 export default LoginForm;
+

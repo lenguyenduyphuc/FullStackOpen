@@ -1,47 +1,26 @@
-import React from "react";
+'use client'
+
+import { useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 const Notification = ({ message }) => {
-  if (message === null) {
-    return null;
-  }
+  const { toast } = useToast();
 
-  console.log(message);
+  useEffect(() => {
+    if (message) {
+      const isError = message.includes("Error");
+      toast({
+        title: isError ? "Error" : "Success",
+        description: message,
+        variant: isError ? "destructive" : "default",
+        duration: 5000,
+      });
+    }
+  }, [message, toast]);
 
-  if (message.includes("Error")) {
-    return (
-      <div
-        className="error"
-        style={{
-          color: "red",
-          background: "lightgrey",
-          fontSize: "20px",
-          borderStyle: "solid",
-          borderRadius: "5px",
-          padding: "10px",
-          marginBottom: "10px",
-        }}
-      >
-        {message}
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className="confirm"
-      style={{
-        color: "green",
-        background: "lightgrey",
-        fontSize: "20px",
-        borderStyle: "solid",
-        borderRadius: "5px",
-        padding: "10px",
-        marginBottom: "10px",
-      }}
-    >
-      {message}
-    </div>
-  );
+  return <Toaster />;
 };
 
 export default Notification;
+

@@ -1,5 +1,12 @@
+'use client'
+
 import { useEffect, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Routes, Route, Link, Navigate } from "react-router-dom";
+import { getBlogs } from "./services/blogs";
+import { getUsers } from "./services/login";
+import { NotificationContext, AuthContext } from "./reducers/Context";
+
 import Home from "./components/Home";
 import Blog from "./components/Blog";
 import Blogs from "./components/Blogs";
@@ -7,25 +14,13 @@ import Users from "./components/Users";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import LogoutForm from "./components/LogoutForm";
-import { getBlogs } from "./services/blogs";
-import { getUsers } from "./services/login";
-import { NotificationContext, AuthContext } from "./reducers/Context";
-import {
-  Routes,
-  Route,
-  Link,
-  Navigate,
-} from "react-router-dom";
 
-import "./App.css";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const App = () => {
   const [notification, notificationDispatch] = useContext(NotificationContext);
   const [user, userDispatch] = useContext(AuthContext);
-
-  const padding = {
-    padding: 5,
-  };
 
   const blogsResult = useQuery({
     queryKey: ["blogs"],
@@ -36,17 +31,17 @@ const App = () => {
   const usersResult = useQuery({
     queryKey: ["users"],
     queryFn: getUsers,
-  })
+  });
 
   if (blogsResult.isLoading) {
-    return <div>loading data...</div>;
+    return <div className="flex justify-center items-center h-screen">Loading data...</div>;
   }
 
   const blogs = blogsResult.data;
   const users = usersResult.data;
 
   return (
-    <div>
+    <div className="container mx-auto p-4">
       <Notification message={notification} />
       {!user ? (
         <Routes>
@@ -54,28 +49,38 @@ const App = () => {
           <Route path="*" element={<Navigate replace to="/login" />} />
         </Routes>
       ) : (
-        <div>
-          <h2>Blogs</h2>
-          <h3>{user.name} logged in</h3>
-          <LogoutForm />
-          <div>
-            <Link style={padding} to="/">Home</Link>
-            <Link style={padding} to="/users">Users</Link>
-            <Link style={padding} to="/login">Login</Link>
-          </div>
-  
-          <Routes>
-            <Route path="/blogs/:id" element={<Blog blogs={blogs} currentUser={user}/>} />
-            <Route path="/users/:id" element={<Blogs blogs={blogs} users={users}/>} />
-            <Route path="/users" element={<Users users={users} blogs={blogs}/>}/>
-            <Route path="/login" element={<LoginForm />}/>
-            <Route path="/" element={<Home />} />
-            <Route path="*" element={<Navigate replace to="/" />} />
-          </Routes>
-          <div>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">Blogs</CardTitle>
+            <p className="text-muted-foreground">{user.name} logged in</p>
+            <LogoutForm />
+          </CardHeader>
+          <CardContent>
+            <nav className="flex space-x-4 mb-4">
+              <Button variant="ghost" asChild>
+                <Link to="/">Home</Link>
+              </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/users">Users</Link>
+              </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/login">Login</Link>
+              </Button>
+            </nav>
+
+            <Routes>
+              <Route path="/blogs/:id" element={<Blog blogs={blogs} currentUser={user}/>} />
+              <Route path="/users/:id" element={<Blogs blogs={blogs} users={users} currentUser={user}/>} />
+              <Route path="/users" element={<Users users={users} blogs={blogs}/>}/>
+              <Route path="/login" element={<LoginForm />}/>
+              <Route path="/" element={<Home />} />
+              <Route path="*" element={<Navigate replace to="/" />} />
+            </Routes>
+          </CardContent>
+          <div className="text-center text-sm text-muted-foreground mt-4">
             <i>Blogs app, Department of Computer Science 2024</i>
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );
