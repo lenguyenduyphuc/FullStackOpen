@@ -31,7 +31,7 @@ This repository documents my journey through the University of Helsinki's Full S
 | 4    | Testing Express servers   | ✅     |
 | 5    | Testing React apps        | ✅     |
 | 6    | Redux                     | ✅     |
-| 7    | React router & CSS        | 📝     |
+| 7    | React router & CSS        | ✅     |
 | 8    | GraphQL                   | 📝     |
 | 9    | TypeScript                | 📝     |
 | 10   | React Native              | 📝     |
