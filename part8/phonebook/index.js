@@ -1,7 +1,7 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 const { v1: uuid } = require('uuid')
-
+const { GraphQLError } = require('graphql') 
 let authors = [
   {
     name: 'Robert Martin',
@@ -126,7 +126,11 @@ const typeDefs = `
       author: String!
       published: Int!
       genres: [String!]!
-    ) : Book
+    ) : Book,
+    editAuthor(
+      name: String!
+      setBornTo: Int!
+    ) : Author
   }
 `
 
@@ -149,8 +153,41 @@ const resolvers = {
     allAuthors: (root, args) => {
       return authors.map(author => ({
         name: author.name,
+        born: author.born,
         bookCount: books.filter(b => b.author === author.name).length
       }))
+    }
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      if (!authors.find(a => a.name === args.author)){
+        const newAuthor = {
+          name: args.author,
+          born: null,
+          bookCount: 1,
+        }
+        authors = authors.concat(newAuthor)
+      }
+      const book = { ...args, id: uuid()}
+      books = books.concat(book)
+      return book
+    },
+    editAuthor: (root, args) => {
+      const author = authors.find(a => a.name === args.name)
+      if (!author){
+        throw new GraphQLError('User is not existed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name
+          }
+        })
+      }
+      const updatedAuthor = {
+        ...author,
+        born: args.setBornTo
+      }
+      authors = authors.map(a => a.name === args.name ? updatedAuthor : a)
+      return updatedAuthor
     }
   }
 }
